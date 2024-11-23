@@ -3,21 +3,27 @@ package com.srgi.service.usuario;
 import com.srgi.dto.UEmpresaDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
+import com.srgi.exeptions.AlreadyExistExeption;
 import com.srgi.exeptions.ResourceNotFoundExeption;
-import com.srgi.model.UEmpresa;
 import com.srgi.model.UExterno;
 import com.srgi.model.Usuario;
 import com.srgi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImp implements UsuarioService {
-
+    private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Usuario getUsuarioById(Integer id) {
@@ -26,16 +32,20 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public Usuario registrarUsuario(UExternoDTO usuarioDTO) {
-        UExterno uExterno = new UExterno();
-        uExterno.setNombre(usuarioDTO.getNombre());
-        uExterno.setApellido(usuarioDTO.getApellido());
-        uExterno.setEmail(usuarioDTO.getEmail());
-        uExterno.setPassword(usuarioDTO.getPassword()); //Habria que cifrarla?
-        uExterno.setEmail(usuarioDTO.getEmail());
-        uExterno.setCuil(usuarioDTO.getCuil());
-        uExterno.setDescripcion(usuarioDTO.getDescripcion());
-        uExterno.setEmpresa(usuarioDTO.getEmpresa());
-        return usuarioRepository.save(uExterno);
+        return Optional.of(usuarioDTO)
+                .filter(usuari -> !usuarioRepository.existByemail(usuarioDTO.getEmail()))
+                .map(usuariodto-> {
+                    UExterno uExterno = new UExterno();
+                    uExterno.setNombre(usuariodto.getNombre());
+                    uExterno.setApellido(usuariodto.getApellido());
+                    uExterno.setEmail(usuariodto.getEmail());
+                    uExterno.setPassword(usuarioDTO.getPassword()); //passwordEncoder.encode(usuarioDTO.getPassword()) Cuando verigique que funcione bien el registro , lo hago
+                    uExterno.setEmail(usuariodto.getEmail());
+                    uExterno.setCuil(usuariodto.getCuil());
+                    uExterno.setDescripcion(usuariodto.getDescripcion());
+                    uExterno.setEmpresa(usuariodto.getEmpresa());
+                    return usuarioRepository.save(uExterno);
+                }).orElseThrow(()-> new AlreadyExistExeption("Usuario con email" + usuarioDTO.getEmail() +"ya existe"));
 
     }
 
@@ -55,22 +65,38 @@ public class UsuarioServiceImp implements UsuarioService {
         return usuarioExistente;
     }
 
-    public UEmpresaDTO convertirAEmpresaDTO(Usuario usuarioExistente, UsuarioDTO usuarioDTO) {
-        UEmpresaDTO uempresaDTO = new UEmpresaDTO();
-        uempresaDTO.setNombre(usuarioDTO.getNombre());
-        uempresaDTO.setApellido(usuarioDTO.getApellido());
-        uempresaDTO.setEmail(usuarioDTO.getEmail());
-        //uempresaDTO.setLegajo();
-        return uempresaDTO;
+    public UEmpresaDTO convertirAEmpresaDTO(Usuario usuario) {
+        return modelMapper.map(usuario, UEmpresaDTO.class);
     }
 
     @Override
     public void deleteUsuario(Integer id) {
-        usuarioRepository.deleteById(id);
+        usuarioRepository.findById(id).ifPresentOrElse(usuarioRepository::delete, ()-> {
+            throw new ResourceNotFoundExeption("Usuario no encontrado");
+        });
     }
 
     @Override
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    @Override
+    public Usuario getUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return usuarioRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<UsuarioDTO> convertirAUsuariosDTO(List<Usuario> usuarios) {
+        return usuarios.stream()
+                .map(usuario -> modelMapper.map(usuario, UsuarioDTO.class))
+                .toList();
+    }
+
+    @Override
+    public UExternoDTO convertirAUsuarioDTO(Usuario usuario) {
+        return modelMapper.map(usuario, UExternoDTO.class);
     }
 }

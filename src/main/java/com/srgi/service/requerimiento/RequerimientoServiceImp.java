@@ -69,7 +69,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
             requerimiento.setRequerimientosRelacionados(relacionados);
         }
 
-        return null;
+        return requerimiento;
 
     }
 
@@ -84,6 +84,12 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
 
     @Override
+    public Requerimiento getRequerimientoById(Integer id) {
+        return requerimientoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
+    }
+
+    @Override
     public List<Requerimiento> getRequerimientosById(Integer id) {
         List<Requerimiento> requerimientos = new ArrayList<>();
         Requerimiento requerimiento = requerimientoRepository.findById(id)
@@ -93,6 +99,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
 
+    //Verificar si esta bien
     @Override
     public Requerimiento cerrarRequerimiento(Integer id_requerimiento, Integer fechaCierre) {
         Requerimiento requerimiento = requerimientoRepository.findById(id_requerimiento)
@@ -104,7 +111,12 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
     @Override
-    public List<RequerimientoDTO> convertirARequerimientoDTO(List<Requerimiento> requerimientos) {
+    public RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimiento) {
+        return modelMapper.map(requerimiento, RequerimientoDTO.class);
+    }
+
+    @Override
+    public List<RequerimientoDTO> convertirARequerimientosDTO(List<Requerimiento> requerimientos) {
         return requerimientos.stream()
                 .map(requerimiento1 -> modelMapper.map(requerimiento1,RequerimientoDTO.class))
                 .toList();
