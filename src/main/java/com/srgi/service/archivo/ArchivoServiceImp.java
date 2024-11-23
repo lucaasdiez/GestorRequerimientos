@@ -1,25 +1,32 @@
 package com.srgi.service.archivo;
 
-import com.srgi.dto.ArchivoDTO;
 import com.srgi.exeptions.ResourceNotFoundExeption;
 import com.srgi.model.Archivo;
-import com.srgi.model.Comentario;
-import com.srgi.model.Requerimiento;
+import com.srgi.model.FileData;
 import com.srgi.repository.ArchivoRepository;
+import com.srgi.repository.FileDataRepository;
+import com.srgi.utils.ArchivoUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
+import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+
+//VERIFICAR EL FUNCIONAMIENTO DE GUARDADO DE ARCHIVOS
 @RequiredArgsConstructor
 @Service
 public class ArchivoServiceImp implements ArchivoService{
     private final ArchivoRepository archivoRepository;
+    private final FileDataRepository fileDataRepository;
+    @Value("${flies.location}")
+    private String archivosLocation;
 
     @Override
     public Archivo getArchivoById(Integer id) {
@@ -35,48 +42,60 @@ public class ArchivoServiceImp implements ArchivoService{
     }
 
     @Override
-    public List<ArchivoDTO> guardarArchivo(List<MultipartFile> archivos, Comentario comentario, Requerimiento requerimiento) {
-        List<ArchivoDTO> guardadosArchivosDTO = new ArrayList<>();
-        for(MultipartFile archivo : archivos){
+    public List<Archivo> guardarArchivo(List<MultipartFile> files) {
+        List<Archivo> guardadosArchivos = new ArrayList<>();
+        if(files.isEmpty()){
+            throw new RuntimeException("Archivo no encontrados");
+        }
+        for(MultipartFile file : files){
             try {
-                Archivo archivoguardar = new Archivo();
-                archivoguardar.setTipo(archivo.getContentType());
-                archivoguardar.setArchivo(new SerialBlob(archivo.getBytes()));
-                archivoguardar.setComentario(comentario);
-                archivoguardar.setRequerimiento(requerimiento);
+                Archivo archivo = archivoRepository.save(Archivo.builder()
+                        .nombre(file.getOriginalFilename())
+                        .tipo(file.getContentType())
+                        .archivoData(ArchivoUtils.compressImage(file.getBytes())).build());
 
-                String armarDescargaUrl ="/archivos/archivo/descargar";
-                String descargaUrl =armarDescargaUrl+ archivoguardar.getId();
-                archivoguardar.setUrl(descargaUrl);
-                Archivo imagenGuardada = archivoRepository.save(archivoguardar);
-
-                imagenGuardada.setUrl(armarDescargaUrl+imagenGuardada.getId());
-                archivoRepository.save(imagenGuardada);
-
-                ArchivoDTO archivoDTO = new ArchivoDTO();
-                archivoDTO.setUrl(imagenGuardada.getUrl());
-                archivoDTO.setId(imagenGuardada.getId());
-                archivoDTO.setTipo(imagenGuardada.getTipo());
-                guardadosArchivosDTO.add(archivoDTO);
-
-            }catch (IOException | SQLException e) {
+                guardadosArchivos.add(archivo);
+            }catch (IOException  e) {
                 throw new RuntimeException(e.getMessage());
             }
         }
-        return guardadosArchivosDTO;
+        return guardadosArchivos;
 
     }
 
     @Override
-    public void updateArchivo(Integer id, MultipartFile archivo) {
-        Archivo archivo1 = getArchivoById(id);
+    public byte[] descargarArchivo(String nombreArchivo) {
+        Optional<Archivo> dbarchivo = archivoRepository.findById(Integer.parseInt(nombreArchivo));
+        byte[] archivo = ArchivoUtils.decompressImage(dbarchivo.get().getArchivoData());
+        return archivo;
+    }
+
+
+    @Override
+    public String guardarArchivoToCarpeta(MultipartFile file){
+        String filePath = archivosLocation+file.getOriginalFilename();
         try {
-            archivo1.setTipo(archivo.getContentType());
-            archivo1.setArchivo(new SerialBlob(archivo.getBytes()));
-            archivoRepository.save(archivo1);
-        }catch (IOException | SQLException e) {
+            FileData fileData = fileDataRepository.save(FileData.builder()
+                    .nombre(file.getOriginalFilename())
+                    .tipo(file.getContentType())
+                    .filePath(filePath).build());
+            file.transferTo(new File(filePath));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+
+        }
+        return "Archivo guardado correctamente";
+    }
+
+    @Override
+    public byte[] descargarArchivoFromCarpeta(String nombreArchivo) {
+        try {
+            Optional<FileData> filedata = fileDataRepository.findByNombre(nombreArchivo);
+            String filepath = filedata.get().getFilePath();
+            return Files.readAllBytes(new File(filepath).toPath());
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 }

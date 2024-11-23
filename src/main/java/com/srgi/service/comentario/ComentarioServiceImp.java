@@ -1,8 +1,9 @@
 package com.srgi.service.comentario;
 
-import com.srgi.dto.ArchivoDTO;
 import com.srgi.dto.ComentarioDTO;
+import com.srgi.enums.EstadoEnum;
 import com.srgi.exeptions.ResourceNotFoundExeption;
+import com.srgi.model.Archivo;
 import com.srgi.model.Comentario;
 import com.srgi.model.Requerimiento;
 import com.srgi.model.Usuario;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class ComentarioServiceImp implements ComentarioService {
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
 
         List<Comentario> comentariosGuardados = null;
-        if (requerimiento.getEstado().equals("Asignado")) {
+        if (requerimiento.getEstado().equals(EstadoEnum.ASIGNADO)) {
             comentariosGuardados = new ArrayList<>();
             int maximo = 5;
             int indice = 0;
@@ -60,8 +60,8 @@ public class ComentarioServiceImp implements ComentarioService {
                 comentario.setRequerimiento(requerimiento);
 
                 if(archivos != null && archivos.size() > maximo && !archivos.get(indice).isEmpty()) {
-                    List<ArchivoDTO> archivoGuardado = archivoService.guardarArchivo(archivos, comentario,requerimiento);
-                    comentario.setArchivos(archivoGuardado.stream().map(ArchivoDTO::toEntity).collect(Collectors.toList()));
+                    List<Archivo> archivoGuardado = archivoService.guardarArchivo(archivos);
+                    comentario.setArchivos(archivoGuardado);
                 }
                 Comentario comentarioGuardado =comentarioRepository.save(comentario);
                 comentariosGuardados.add(comentarioGuardado);
@@ -93,4 +93,6 @@ public class ComentarioServiceImp implements ComentarioService {
     public List<Comentario> getComentarios() {
         return comentarioRepository.findAll();
     }
+
+
 }
