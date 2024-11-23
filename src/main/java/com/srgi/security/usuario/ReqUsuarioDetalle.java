@@ -27,15 +27,16 @@ public class ReqUsuarioDetalle implements UserDetails {
     private Collection<GrantedAuthority> authorities;
 
     public static ReqUsuarioDetalle buildUsuarioDetalle(Usuario usuario) {
-        List<GrantedAuthority> authorities = usuario.getRo
-                .stream()
-                .map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
-                .collect(Collectors.toList());
-        return new ReqUsuarioDetalle(
-                usuario.getId(),
-                usuario.getEmail(),
-                usuario.getPassword(),
-                authorities);
+       // List<GrantedAuthority> authorities = usuario.getRo
+         //       .stream()
+         //      .map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
+          //      .collect(Collectors.toList());
+       // return new ReqUsuarioDetalle(
+       //         usuario.getId(),
+       //         usuario.getEmail(),
+       //         usuario.getPassword(),
+      //          authorities);
+        return null;
     }
 
 

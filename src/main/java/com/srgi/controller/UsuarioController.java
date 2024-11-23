@@ -42,7 +42,9 @@ public class UsuarioController {
             Usuario usuario = usuarioService.getUsuarioById(id);
             UsuarioDTO usuarioDTO = usuarioService.convertirAUsuarioDTO(usuario);
             return ResponseEntity.ok(new ApiResponse("Usuario", usuarioDTO));
-        }catch (ResourceNotFoundExeption e) {}
+        }catch (ResourceNotFoundExeption e) {
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
+        }
     }
 
     @PostMapping("/registrar")

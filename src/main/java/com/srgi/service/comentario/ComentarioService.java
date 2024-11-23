@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ComentarioService {
-    List<Comentario> addComentarios(List<ComentarioDTO> comentarios, Integer idUsuario, Integer idRequerimiento, List<MultipartFile> archivos);
+    Comentario addComentario(ComentarioDTO comentario, Integer idUsuario, Integer idRequerimiento, List<MultipartFile> files);
     Comentario getComentarioById(Integer id);
-    void deleteComentario(Integer id);
     List<Comentario> getComentarios();
+    ComentarioDTO convertirComentarioADTO(Comentario comentario);
+
+    List<ComentarioDTO> convertirAComentariosDTO(List<Comentario> comentarios);
 }

@@ -39,55 +39,43 @@ public class ComentarioServiceImp implements ComentarioService {
     //Verificar Si esta bien realizado
     @Override
     @Lazy
-    public List<Comentario> addComentarios(List<ComentarioDTO> comentarios, Integer idUsuario, Integer idRequerimiento, List<MultipartFile> archivos) {
+    public Comentario addComentario(ComentarioDTO comentarioDTO, Integer idUsuario, Integer idRequerimiento, List<MultipartFile> files) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
         Requerimiento requerimiento = requerimientoRepository.findById(idRequerimiento)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
 
-        List<Comentario> comentariosGuardados = null;
         if (requerimiento.getEstado().equals(EstadoEnum.ASIGNADO)) {
-            comentariosGuardados = new ArrayList<>();
-            int maximo = 5;
-            int indice = 0;
-            for (ComentarioDTO comentarioDTO : comentarios) {
-                Comentario comentario = new Comentario();
-                comentario.setAsunto(comentarioDTO.getAsunto());
-                comentario.setDescripcion(comentarioDTO.getDescripcion());
-                comentario.setFecha(comentarioDTO.getFecha());
-                comentario.setHora(comentarioDTO.getHora());
-                comentario.setUsuario(usuario);
-                comentario.setRequerimiento(requerimiento);
+            Comentario comentario = new Comentario();
+            comentario.setAsunto(comentarioDTO.getAsunto());
+            comentario.setDescripcion(comentarioDTO.getDescripcion());
+            comentario.setFecha(comentarioDTO.getFecha());
+            comentario.setHora(comentarioDTO.getHora());
+            comentario.setUsuario(usuario);
+            comentario.setRequerimiento(requerimiento);
 
-                if(archivos != null && archivos.size() > maximo && !archivos.get(indice).isEmpty()) {
-                    List<Archivo> archivoGuardado = archivoService.guardarArchivo(archivos);
-                    comentario.setArchivos(archivoGuardado);
-                }
-                Comentario comentarioGuardado =comentarioRepository.save(comentario);
-                comentariosGuardados.add(comentarioGuardado);
-                indice++;
-
+            if (!files.isEmpty()) {
+                List<Archivo> archivoGuardado = archivoService.guardarArchivo(files);
+                comentario.setArchivos(archivoGuardado);
             }
-            return comentariosGuardados;
+            return comentarioRepository.save(comentario);
+
         }else {
-            //El requerimiento se encuentra en estado Cerrado
-            return null;
+            throw new RuntimeException("El estado no es valido");
         }
 
     }
+    public ComentarioDTO convertirComentarioADTO(Comentario comentario) {
+        return modelMapper.map(comentario, ComentarioDTO.class);
+    }
 
-    public List<ComentarioDTO> convertirComentarioADTO(List<Comentario> comentarios) {
+    @Override
+    public List<ComentarioDTO> convertirAComentariosDTO(List<Comentario> comentarios) {
         return comentarios.stream()
                 .map(comentario -> modelMapper.map(comentario, ComentarioDTO.class))
                 .toList();
     }
 
-    @Override
-    public void deleteComentario(Integer id) {
-        comentarioRepository.findById(id).ifPresentOrElse(comentarioRepository :: delete, () -> {
-            throw new ResourceNotFoundExeption("Comentario no encontrado");
-        });
-    }
 
     @Override
     public List<Comentario> getComentarios() {
