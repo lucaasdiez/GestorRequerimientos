@@ -1,10 +1,10 @@
 package com.srgi.dto;
 
-import com.srgi.model.Requerimiento;
 import com.srgi.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -22,5 +22,5 @@ public class ComentarioDTO {
 
     private Usuario usuario;
     private RequerimientoDTO requerimiento;
-    private List<ArchivoDTO> archivos;
+    private List<MultipartFile> archivos;
 }
