@@ -17,16 +17,16 @@ services:
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
-      POSTGRES_PASSWORD: YourStrong@Passw0rd
+      POSTGRES_DB: sgri_db
       POSTGRES_USER: sa
-      POSTGRES_DB: requerimientos
+      POSTGRES_PASSWORD: YourStrong@Passw0rd
 
   app:
     image: requerimientosbackend
     environment:
       - SPRING_DATASOURCE_PASSWORD=YourStrong@Passw0rd
       - SPRING_DATASOURCE_USER=sa
-      - SPRING_DATASOURCE_URL = jdbc:postgresql://localhost:5432/requerimientos
+      - SPRING_DATASOURCE_URL = jdbc:postgresql://localhost:5432/sgri_db
     ports:
       - "8080:8080"
     depends_on:
