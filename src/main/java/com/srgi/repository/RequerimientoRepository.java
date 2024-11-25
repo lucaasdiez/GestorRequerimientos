@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RequerimientoRepository extends JpaRepository<Requerimiento, Integer> {
-    Optional<Requerimiento> findAllByUsuarioPropietarioId(Integer id);
+    List<Requerimiento> findAllByEmisorId(Integer id);
 }

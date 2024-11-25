@@ -1,6 +1,7 @@
 package com.srgi.controller;
 
 import com.srgi.dto.RequerimientoDTO;
+import com.srgi.enums.EstadoEnum;
 import com.srgi.exeptions.ResourceNotFoundExeption;
 import com.srgi.model.Archivo;
 import com.srgi.model.Requerimiento;
@@ -30,7 +31,7 @@ public class RequerimientoController {
             List<RequerimientoDTO> requerimientoDTOS =requerimientoService.convertirARequerimientosDTO(requerimientos);
             return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
         }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Requerimiento no encontrado", null));
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
 
     }
@@ -48,12 +49,12 @@ public class RequerimientoController {
 
     @GetMapping("/flitrar")
         public ResponseEntity<ApiResponse> flitrarRequerimiento(
-                @RequestParam(required = false) String tipo,
+                @RequestParam(required = false) String tipoRequerimiento,
                 @RequestParam(required = false) String categoria,
-                @RequestParam(required = false) String estado
+                @RequestParam(required = false) EstadoEnum estado
         ) {
         try {
-            List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipo,categoria,estado);
+            List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado);
             List<RequerimientoDTO> requerimientoDTOS = requerimientoService.convertirARequerimientosDTO(requerimientos);
             return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
         }catch (ResourceNotFoundExeption e) {

@@ -27,8 +27,8 @@ public class TipoRequerimiento {
     @JsonIgnore
     private List<Requerimiento> requerimientos;
 
-    @OneToMany(mappedBy = "tipoRequerimiento")
-    @JsonIgnore
-    private List<CategoriaRequerimiento> categoriasRequerimientos;
+    @OneToOne
+    @JoinColumn(name = "categoria_req_id")
+    private CategoriaRequerimiento categoriaRequerimiento;
 
 }

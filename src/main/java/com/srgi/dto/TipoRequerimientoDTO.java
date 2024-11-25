@@ -14,5 +14,5 @@ public class TipoRequerimientoDTO {
     private Integer idTipoRequerimiento;
     private String codigo;
     private String descripcion;
-    private List<CategoriaRequerimiento> categoriaRequerimientos;
+    private CategoriaRequerimientoDTO categoriaRequerimientos;
 }
