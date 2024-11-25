@@ -18,7 +18,6 @@ public class CategoriaRequerimiento {
     private Integer id;
     private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_requerimiento_id")
+    @OneToOne(mappedBy = "categoriaRequerimiento")
     private TipoRequerimiento tipoRequerimiento;
 }

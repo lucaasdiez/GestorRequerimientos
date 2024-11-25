@@ -33,8 +33,7 @@ public abstract class Usuario {
     @JsonIgnore
     private List<Requerimiento> requerimientoEmisor;
 
-    @OneToOne
-    @JoinColumn(name = "req_propietario_id")
+    @OneToOne(mappedBy = "usuarioPropietario")
     private Requerimiento requerimientoPropietario;
 
     @OneToMany(mappedBy = "usuario")

@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class Requerimiento {
     private String codigo;
     private String descripcion;
     private EstadoEnum estado;
-    private Date fechaAlta;
+    private LocalDate fechaAlta;
     private LocalTime horaAlta;
     private String prioridad;
 
@@ -45,7 +46,8 @@ public class Requerimiento {
     @JsonIgnore
     private Usuario emisor;
 
-    @OneToOne(mappedBy = "requerimientoPropietario")
+    @OneToOne
+    @JoinColumn(name = "propietario_id")
     private Usuario usuarioPropietario;
 
     @OneToMany(mappedBy = "requerimiento")

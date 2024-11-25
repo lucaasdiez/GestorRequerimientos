@@ -27,7 +27,6 @@ public class ComentarioServiceImp implements ComentarioService {
     private final RequerimientoRepository requerimientoRepository;
     private final UsuarioRepository usuarioRepository;
     private final ArchivoService archivoService;
-
     private final ModelMapper modelMapper;
 
     @Override
@@ -53,9 +52,10 @@ public class ComentarioServiceImp implements ComentarioService {
             comentario.setHora(comentarioDTO.getHora());
             comentario.setUsuario(usuario);
             comentario.setRequerimiento(requerimiento);
+            Comentario comentarioSaved = comentarioRepository.save(comentario);
 
             if (!files.isEmpty()) {
-                List<Archivo> archivoGuardado = archivoService.guardarArchivo(files);
+                List<Archivo> archivoGuardado = archivoService.archivosUpload(files, requerimiento.getId(), comentarioSaved.getId());
                 comentario.setArchivos(archivoGuardado);
             }
             return comentarioRepository.save(comentario);

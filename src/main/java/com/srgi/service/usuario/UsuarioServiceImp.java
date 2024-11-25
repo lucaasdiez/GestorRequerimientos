@@ -10,9 +10,7 @@ import com.srgi.model.Usuario;
 import com.srgi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImp implements UsuarioService {
-    private final PasswordEncoder passwordEncoder;
+   // private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
 
@@ -33,7 +31,7 @@ public class UsuarioServiceImp implements UsuarioService {
     @Override
     public Usuario registrarUsuario(UExternoDTO usuarioDTO) {
         return Optional.of(usuarioDTO)
-                .filter(usuari -> !usuarioRepository.existByemail(usuarioDTO.getEmail()))
+                .filter(usuari -> !usuarioRepository.existsByEmail(usuarioDTO.getEmail()))
                 .map(usuariodto-> {
                     UExterno uExterno = new UExterno();
                     uExterno.setNombre(usuariodto.getNombre());
@@ -81,12 +79,12 @@ public class UsuarioServiceImp implements UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    @Override
-    public Usuario getUsuarioAutenticado() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return usuarioRepository.findByEmail(email);
-    }
+  //  @Override
+ //   public Usuario getUsuarioAutenticado() {
+ //       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  //      String email = authentication.getName();
+   //     return usuarioRepository.findByEmail(email);
+   // }
 
     @Override
     public List<UsuarioDTO> convertirAUsuariosDTO(List<Usuario> usuarios) {

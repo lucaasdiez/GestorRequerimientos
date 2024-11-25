@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Collection;
-import java.util.HashSet;
 
 @Entity
 @Getter
@@ -16,7 +14,7 @@ import java.util.HashSet;
 @NoArgsConstructor
 public class UExterno extends Usuario{
 
-    private int cuil;
+    private long cuil;
     private String descripcion;
     private String empresa;
 }

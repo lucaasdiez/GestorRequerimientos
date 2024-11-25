@@ -1,12 +1,9 @@
 package com.srgi.service.requerimiento;
 
-import com.srgi.dto.RequerimientoDTO;
+import com.srgi.dto.*;
 import com.srgi.enums.EstadoEnum;
 import com.srgi.exeptions.ResourceNotFoundExeption;
-import com.srgi.model.Archivo;
-import com.srgi.model.Requerimiento;
-import com.srgi.model.TipoRequerimiento;
-import com.srgi.model.Usuario;
+import com.srgi.model.*;
 import com.srgi.repository.RequerimientoRepository;
 import com.srgi.repository.TipoRequerimientoRepository;
 import com.srgi.repository.UsuarioRepository;
@@ -21,14 +18,17 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RequerimientoServiceImp implements RequerimientoService{
-    private static long contador = 1000000000L;
     public final RequerimientoRepository requerimientoRepository;
     public final UsuarioRepository usuarioRepository;
     private final TipoRequerimientoRepository tipoRequerimientoRepository;
@@ -38,18 +38,22 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private EntityManager entityManager;
 
     @Override
-    public Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO) {
-        TipoRequerimiento tipoRequerimiento = tipoRequerimientoRepository.findById(requerimientoDTO.getTipoRequerimiento().getIdTipoRequerimiento())
+    public Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO,List<MultipartFile> files) {
+        TipoRequerimiento tipoRequerimiento = tipoRequerimientoRepository.findByCodigo(requerimientoDTO.getTipoRequerimiento().getCodigo())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Tipo de requerimiento no encontrado"));
-        Usuario propietario = usuarioRepository.findById(requerimientoDTO.getUsuarioPropietario().getIdUsuario())
+        Usuario propietario = null;
+        if (requerimientoDTO.getPropietario() != null) {
+            propietario = usuarioRepository.findById(requerimientoDTO.getPropietario().getId())
+                    .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
+        }
+        Usuario emisor = usuarioRepository.findById(requerimientoDTO.getEmisor().getId())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        Usuario emisor = usuarioRepository.findById(requerimientoDTO.getEmisor().getIdUsuario())
-                .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        List<Archivo> archivos = archivoService.guardarArchivo(requerimientoDTO.getArchivos());
 
-        String codigo = generarCodigo(tipoRequerimiento,contador);
         Requerimiento requerimiento = new Requerimiento();
-        requerimiento.setCodigo(codigo);
+        LocalDate fecha = LocalDate.now();
+        LocalTime hora = LocalTime.now();
+        requerimiento.setFechaAlta(fecha);
+        requerimiento.setHoraAlta(hora);
         requerimiento.setDescripcion(requerimientoDTO.getDescripcion());
         requerimiento.setEstado(EstadoEnum.ABIERTO);
         requerimiento.setTipoRequerimiento(tipoRequerimiento);
@@ -57,6 +61,12 @@ public class RequerimientoServiceImp implements RequerimientoService{
         requerimiento.setUsuarioPropietario(propietario);
         requerimiento.setPrioridad(requerimientoDTO.getPrioridad());
         requerimiento.setAsunto(requerimientoDTO.getAsunto());
+
+        Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
+        List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
+        String codigo = generarCodigo(tipoRequerimiento,requerimiento.getId());
+        requerimiento.setCodigo(codigo);
+
         requerimiento.setArchivos(archivos);
 
         if(requerimientoDTO.getRequerimientoRelacionado() != null){
@@ -69,33 +79,28 @@ public class RequerimientoServiceImp implements RequerimientoService{
             requerimiento.setRequerimientosRelacionados(relacionados);
         }
 
-        return requerimiento;
+        return requerimientoRepository.save(requerimiento);
 
     }
 
-    private String generarCodigo(TipoRequerimiento tipoRequerimiento, long contador) {
+    private String generarCodigo(TipoRequerimiento tipoRequerimiento, Integer idRequerimiento) {
         LocalDate fecha = LocalDate.now();
         int anio = fecha.getYear();
-        contador++;
-        String codigoContador = String.format("%011d", contador);
+        String codigoContador = String.format("%011d", idRequerimiento);
         return tipoRequerimiento.getCodigo() +"-" + anio + "-" + codigoContador;
 
     }
 
 
     @Override
-    public Requerimiento getRequerimientoById(Integer id) {
-        return requerimientoRepository.findById(id)
+    public Requerimiento getRequerimientoById(Integer id_requerimiento) {
+        return requerimientoRepository.findById(id_requerimiento)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
     }
 
     @Override
-    public List<Requerimiento> getRequerimientosById(Integer id) {
-        List<Requerimiento> requerimientos = new ArrayList<>();
-        Requerimiento requerimiento = requerimientoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
-        requerimientos.add(requerimiento);
-        return requerimientos;
+    public List<Requerimiento> getRequerimientosByPropietarioId(Integer id) {
+        return requerimientoRepository.findAllByEmisorId(id);
     }
 
 
@@ -112,18 +117,61 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     @Override
     public RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimiento) {
-        return modelMapper.map(requerimiento, RequerimientoDTO.class);
+        RequerimientoDTO req=  modelMapper.map(requerimiento, RequerimientoDTO.class);
+        List<ArchivoDTO> archivosDTO = requerimiento.getArchivos().stream()
+                .map(archivo -> {
+                    ArchivoDTO archivoDTO = new ArchivoDTO();
+                    archivoDTO.setId(archivo.getId());
+                    archivoDTO.setNombre(archivo.getNombre());
+                    archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId()); // URL del endpoint de descarga
+                    return archivoDTO;
+                }).toList();
+        req.setArchivos(archivosDTO);
+        TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento(), TipoRequerimientoDTO.class);
+        CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
+        tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
+        req.setTipoRequerimiento(tipoRequerimientoDTO);
+        return req;
     }
 
     @Override
     public List<RequerimientoDTO> convertirARequerimientosDTO(List<Requerimiento> requerimientos) {
         return requerimientos.stream()
-                .map(requerimiento1 -> modelMapper.map(requerimiento1,RequerimientoDTO.class))
-                .toList();
+                .map(requerimiento1 -> {
+                    RequerimientoDTO requerimientoDTO = modelMapper.map(requerimiento1, RequerimientoDTO.class);
+
+                    // Procesar archivos
+                    if(requerimiento1.getArchivos() != null) {
+                        List<ArchivoDTO> archivosDTO = requerimiento1.getArchivos().stream()
+                                .map(archivo -> {
+                                    ArchivoDTO archivoDTO = new ArchivoDTO();
+                                    archivoDTO.setId(archivo.getId());
+                                    archivoDTO.setNombre(archivo.getNombre());
+                                    archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId());
+                                    return archivoDTO;
+                                }).toList();
+                        requerimientoDTO.setArchivos(archivosDTO);
+                    }
+
+                    // Procesar tipoRequerimiento y su categoría
+                    TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(requerimiento1.getTipoRequerimiento(), TipoRequerimientoDTO.class);
+                    CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento1.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
+                    tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
+                    requerimientoDTO.setTipoRequerimiento(tipoRequerimientoDTO);
+                    UExternoDTO propietario = null;
+                    if (requerimiento1.getUsuarioPropietario() != null) {
+                        propietario = modelMapper.map(requerimiento1.getUsuarioPropietario(), UExternoDTO.class);
+                    }
+                    UExternoDTO emisor = modelMapper.map(requerimiento1.getEmisor(), UExternoDTO.class);
+                    requerimientoDTO.setEmisor(emisor);
+                    requerimientoDTO.setPropietario(propietario);
+
+                    return requerimientoDTO;
+                }).toList();
     }
 
     @Override
-    public List<Requerimiento> getRequerimientoByFiltros(String tipo, String categoria, String estado) {
+    public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado) {
         //El CriteriaBuilder se utiliza para crear los componentes de la consulta
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         //Se crea la consulta, en este caso una consulta para obtener objetos de la clase requerimiento
@@ -133,11 +181,11 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
         //Un predicado es una condicion que sera evaluada en la consulta, si un parametro es null, no se agrega a la consulta y se añade un predicado para filtrar ese campo
         List<Predicate> predicates = new ArrayList<>();
-        if (tipo != null){
-            predicates.add(cb.equal(root.get("tipo"),tipo));
+        if (tipoRequerimiento != null){
+            predicates.add(cb.equal(root.join("tipoRequerimiento").get("codigo"),tipoRequerimiento));
         }
         if (categoria != null){
-            predicates.add(cb.equal(root.get("categoria"),categoria));
+            predicates.add(cb.equal(root.join("tipoRequerimiento").join("categoriaRequerimiento").get("descripcion"),categoria));
         }
         if (estado != null){
             predicates.add(cb.equal(root.get("estado"),estado));
