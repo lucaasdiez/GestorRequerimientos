@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class TipoRequerimientoDTO {
     private Integer idTipoRequerimiento;
-    private int codigo;
+    private String codigo;
     private String descripcion;
     private List<CategoriaRequerimiento> categoriaRequerimientos;
 }

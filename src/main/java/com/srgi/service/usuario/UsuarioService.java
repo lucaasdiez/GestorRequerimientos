@@ -15,7 +15,7 @@ public interface UsuarioService {
     Usuario updateUsuario(Integer id, UsuarioDTO usuarioDTO);
     void deleteUsuario(Integer id);
     List<Usuario> getAllUsuarios();
-    public Usuario getUsuarioAutenticado();
+   // public Usuario getUsuarioAutenticado();
 
     List<UsuarioDTO> convertirAUsuariosDTO(List<Usuario> usuarios);
 

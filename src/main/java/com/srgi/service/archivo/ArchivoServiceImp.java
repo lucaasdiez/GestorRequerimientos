@@ -2,9 +2,9 @@ package com.srgi.service.archivo;
 
 import com.srgi.exeptions.ResourceNotFoundExeption;
 import com.srgi.model.Archivo;
-import com.srgi.model.FileData;
+import com.srgi.model.Comentario;
+import com.srgi.model.Requerimiento;
 import com.srgi.repository.ArchivoRepository;
-import com.srgi.repository.FileDataRepository;
 import com.srgi.utils.ArchivoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,90 +12,46 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 
-//VERIFICAR EL FUNCIONAMIENTO DE GUARDADO DE ARCHIVOS
 @RequiredArgsConstructor
 @Service
 public class ArchivoServiceImp implements ArchivoService{
     private final ArchivoRepository archivoRepository;
-    private final FileDataRepository fileDataRepository;
     @Value("${flies.location}")
-    private String archivosLocation;
+    private String carpetaPath;
+
 
     @Override
-    public Archivo getArchivoById(Integer id) {
-        return archivoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Archivo no encontrado"));
-    }
+    public String archivosUpload(List<MultipartFile> files) {
+        try {
+            for(MultipartFile file : files){
+                String fileName= UUID.randomUUID().toString();
+                byte[] bytes = file.getBytes();
+                String fileOriginalName = file.getOriginalFilename();
+                assert fileOriginalName != null;
 
-    @Override
-    public void deleteArchivo(Integer id) {
-        archivoRepository.findById(id).ifPresentOrElse(archivoRepository :: delete,() ->{
-            throw new ResourceNotFoundExeption("Archivo no encontrado con id " + id);
-        } );
-    }
-
-    @Override
-    public List<Archivo> guardarArchivo(List<MultipartFile> files) {
-        List<Archivo> guardadosArchivos = new ArrayList<>();
-        if(files.isEmpty()){
-            throw new RuntimeException("Archivo no encontrados");
-        }
-        for(MultipartFile file : files){
-            try {
-                Archivo archivo = archivoRepository.save(Archivo.builder()
-                        .nombre(file.getOriginalFilename())
-                        .tipo(file.getContentType())
-                        .archivoData(ArchivoUtils.compressImage(file.getBytes())).build());
-
-                guardadosArchivos.add(archivo);
-            }catch (IOException  e) {
-                throw new RuntimeException(e.getMessage());
+                long fileSize = file.getSize();
+                long maxFileSize = 5 * 1024 * 1024;
+                if(fileSize > maxFileSize){
+                    return "Archivo debe ser menor o igual a 5MB";
+                }
+                if(!fileOriginalName.endsWith(".pdf") && !fileOriginalName.endsWith(".docx") && !fileOriginalName.endsWith(".xlsx")){
+                    return "El archivo debe ser PDF, WORD o EXCEL";
+                }
+                String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
+                String newFileName = fileOriginalName + fileExtension;
+                Path path = Paths.get(carpetaPath +  newFileName);
+                Files.write(path, bytes);
             }
-        }
-        return guardadosArchivos;
-
-    }
-
-    @Override
-    public byte[] descargarArchivo(String nombreArchivo) {
-        Optional<Archivo> dbarchivo = archivoRepository.findById(Integer.parseInt(nombreArchivo));
-        byte[] archivo = ArchivoUtils.decompressImage(dbarchivo.get().getArchivoData());
-        return archivo;
-    }
-
-
-    @Override
-    public String guardarArchivoToCarpeta(MultipartFile file){
-        String filePath = archivosLocation+file.getOriginalFilename();
-        try {
-            FileData fileData = fileDataRepository.save(FileData.builder()
-                    .nombre(file.getOriginalFilename())
-                    .tipo(file.getContentType())
-                    .filePath(filePath).build());
-            file.transferTo(new File(filePath));
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-
-        }
-        return "Archivo guardado correctamente";
-    }
-
-    @Override
-    public byte[] descargarArchivoFromCarpeta(String nombreArchivo) {
-        try {
-            Optional<FileData> filedata = fileDataRepository.findByNombre(nombreArchivo);
-            String filepath = filedata.get().getFilePath();
-            return Files.readAllBytes(new File(filepath).toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            return "Archivo Instalado Correctamente";
+        }catch (Exception e){
+            throw new ResourceNotFoundExeption(e.getMessage());
         }
     }
 }

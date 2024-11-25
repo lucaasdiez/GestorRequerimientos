@@ -20,7 +20,7 @@ public class TipoRequerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int codigo;
+    private String codigo;
     private String descripcion;
 
     @OneToMany(mappedBy = "tipoRequerimiento")

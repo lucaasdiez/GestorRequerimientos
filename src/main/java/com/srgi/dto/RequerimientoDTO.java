@@ -25,9 +25,9 @@ public class RequerimientoDTO {
     private Date fechaAlta;
     private LocalTime horaAlta;
     private String prioridad;
-    private TipoRequerimientoDTO tipoRequerimiento;
-    private UsuarioDTO emisor;
-    private UsuarioDTO usuarioPropietario;
+    private String tipoRequerimiento;
+    private UExternoDTO emisor;
+    private UExternoDTO propietario;
     private List<EventoDTO> eventos;
     private List<MultipartFile> archivos;
     private List<ComentarioDTO> comentarios;

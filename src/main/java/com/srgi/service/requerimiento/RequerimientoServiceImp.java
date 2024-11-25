@@ -21,6 +21,8 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -38,14 +40,13 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private EntityManager entityManager;
 
     @Override
-    public Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO) {
-        TipoRequerimiento tipoRequerimiento = tipoRequerimientoRepository.findById(requerimientoDTO.getTipoRequerimiento().getIdTipoRequerimiento())
+    public Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO,List<MultipartFile> files) {
+        TipoRequerimiento tipoRequerimiento = tipoRequerimientoRepository.findByCodigo(requerimientoDTO.getTipoRequerimiento())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Tipo de requerimiento no encontrado"));
-        Usuario propietario = usuarioRepository.findById(requerimientoDTO.getUsuarioPropietario().getIdUsuario())
+        Usuario propietario = usuarioRepository.findById(requerimientoDTO.getPropietario().getId())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        Usuario emisor = usuarioRepository.findById(requerimientoDTO.getEmisor().getIdUsuario())
+        Usuario emisor = usuarioRepository.findById(requerimientoDTO.getEmisor().getId())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        List<Archivo> archivos = archivoService.guardarArchivo(requerimientoDTO.getArchivos());
 
         String codigo = generarCodigo(tipoRequerimiento,contador);
         Requerimiento requerimiento = new Requerimiento();
@@ -57,6 +58,8 @@ public class RequerimientoServiceImp implements RequerimientoService{
         requerimiento.setUsuarioPropietario(propietario);
         requerimiento.setPrioridad(requerimientoDTO.getPrioridad());
         requerimiento.setAsunto(requerimientoDTO.getAsunto());
+
+        List<Archivo> archivos = archivoService.guardarArchivo(files,requerimiento, null);
         requerimiento.setArchivos(archivos);
 
         if(requerimientoDTO.getRequerimientoRelacionado() != null){
@@ -69,7 +72,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
             requerimiento.setRequerimientosRelacionados(relacionados);
         }
 
-        return requerimiento;
+        return requerimientoRepository.save(requerimiento);
 
     }
 
@@ -90,9 +93,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
     @Override
-    public List<Requerimiento> getRequerimientosById(Integer id) {
+    public List<Requerimiento> getRequerimientosByPropietarioId(Integer id) {
         List<Requerimiento> requerimientos = new ArrayList<>();
-        Requerimiento requerimiento = requerimientoRepository.findById(id)
+        Requerimiento requerimiento = requerimientoRepository.findAllByUsuarioPropietarioId(id)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
         requerimientos.add(requerimiento);
         return requerimientos;

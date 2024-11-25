@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UExternoDTO extends UsuarioDTO{
-    private int cuil;
+    private long cuil;
     private String descripcion;
     private String empresa;
 }

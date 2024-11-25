@@ -25,7 +25,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
-
     @GetMapping("/todos")
     public ResponseEntity<ApiResponse> listarUsuarios() {
         try {
@@ -36,6 +35,7 @@ public class UsuarioController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
+
     @GetMapping("/{id}/detalle")
     public ResponseEntity<ApiResponse> getUsuario(@PathVariable Integer id) {
         try {
