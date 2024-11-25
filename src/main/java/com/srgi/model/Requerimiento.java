@@ -45,7 +45,8 @@ public class Requerimiento {
     @JsonIgnore
     private Usuario emisor;
 
-    @OneToOne(mappedBy = "requerimientoPropietario")
+    @OneToOne
+    @JoinColumn(name = "propietario_id")
     private Usuario usuarioPropietario;
 
     @OneToMany(mappedBy = "requerimiento")

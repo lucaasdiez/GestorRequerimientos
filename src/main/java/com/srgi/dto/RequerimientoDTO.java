@@ -1,5 +1,6 @@
 package com.srgi.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.srgi.model.*;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -28,8 +29,7 @@ public class RequerimientoDTO {
     private String tipoRequerimiento;
     private UExternoDTO emisor;
     private UExternoDTO propietario;
-    private List<EventoDTO> eventos;
-    private List<MultipartFile> archivos;
+    private List<ArchivoDTO> archivos;
     private List<ComentarioDTO> comentarios;
     private List<RequerimientoDTO> requerimientoRelacionado;
 }

@@ -40,7 +40,7 @@ public class RequerimientoController {
         try {
             Requerimiento requerimiento = requerimientoService.getRequerimientoById(id);
             RequerimientoDTO respDTO = requerimientoService.convertirARequerimientoDTO(requerimiento);
-            return ResponseEntity.ok(new ApiResponse("Requerimiento", respDTO));
+            return ResponseEntity.ok(new ApiResponse("Requerimiento", respDTO ));
         }catch (ResourceNotFoundExeption e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Requerimiento no encontrado", null));
         }

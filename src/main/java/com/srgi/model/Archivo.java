@@ -16,12 +16,8 @@ public class Archivo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String tipo;
     private String nombre;
-
-    @Lob
-    @Column(name = "archivo_data", length = 10000)
-    private byte[] archivoData;
+    private String ruta;
 
     @ManyToOne
     @JoinColumn(name = "comentario_id")

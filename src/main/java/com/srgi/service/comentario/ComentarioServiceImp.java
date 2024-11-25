@@ -52,9 +52,10 @@ public class ComentarioServiceImp implements ComentarioService {
             comentario.setHora(comentarioDTO.getHora());
             comentario.setUsuario(usuario);
             comentario.setRequerimiento(requerimiento);
+            Comentario comentarioSaved = comentarioRepository.save(comentario);
 
             if (!files.isEmpty()) {
-                List<Archivo> archivoGuardado = archivoService.guardarArchivo(files, requerimiento, comentario);
+                List<Archivo> archivoGuardado = archivoService.archivosUpload(files, requerimiento.getId(), comentarioSaved.getId());
                 comentario.setArchivos(archivoGuardado);
             }
             return comentarioRepository.save(comentario);

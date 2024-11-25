@@ -1,5 +1,6 @@
 package com.srgi.service.requerimiento;
 
+import com.srgi.dto.ArchivoDTO;
 import com.srgi.dto.RequerimientoDTO;
 import com.srgi.enums.EstadoEnum;
 import com.srgi.exeptions.ResourceNotFoundExeption;
@@ -26,11 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RequerimientoServiceImp implements RequerimientoService{
-    private static long contador = 1000000000L;
+    private static long contador = 0L;
     public final RequerimientoRepository requerimientoRepository;
     public final UsuarioRepository usuarioRepository;
     private final TipoRequerimientoRepository tipoRequerimientoRepository;
@@ -59,7 +61,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
         requerimiento.setPrioridad(requerimientoDTO.getPrioridad());
         requerimiento.setAsunto(requerimientoDTO.getAsunto());
 
-        List<Archivo> archivos = archivoService.guardarArchivo(files,requerimiento, null);
+        Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
+        List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
+
         requerimiento.setArchivos(archivos);
 
         if(requerimientoDTO.getRequerimientoRelacionado() != null){
@@ -87,8 +91,8 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
 
     @Override
-    public Requerimiento getRequerimientoById(Integer id) {
-        return requerimientoRepository.findById(id)
+    public Requerimiento getRequerimientoById(Integer id_requerimiento) {
+        return requerimientoRepository.findById(id_requerimiento)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
     }
 
@@ -115,7 +119,17 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     @Override
     public RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimiento) {
-        return modelMapper.map(requerimiento, RequerimientoDTO.class);
+        RequerimientoDTO req=  modelMapper.map(requerimiento, RequerimientoDTO.class);
+        List<ArchivoDTO> archivosDTO = requerimiento.getArchivos().stream()
+                .map(archivo -> {
+                    ArchivoDTO archivoDTO = new ArchivoDTO();
+                    archivoDTO.setId(archivo.getId());
+                    archivoDTO.setNombre(archivo.getNombre());
+                    archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId()); // URL del endpoint de descarga
+                    return archivoDTO;
+                }).toList();
+        req.setArchivos(archivosDTO);
+        return req;
     }
 
     @Override
