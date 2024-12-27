@@ -78,8 +78,8 @@ public class ComentarioServiceImp implements ComentarioService {
 
 
     @Override
-    public List<Comentario> getComentarios() {
-        return comentarioRepository.findAll();
+    public List<Comentario> getComentarios(Integer idRequerimiento) {
+        return comentarioRepository.findAllByRequerimientoId(idRequerimiento);
     }
 
 

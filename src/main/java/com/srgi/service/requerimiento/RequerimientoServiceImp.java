@@ -109,6 +109,8 @@ public class RequerimientoServiceImp implements RequerimientoService{
     public Requerimiento cerrarRequerimiento(Integer id_requerimiento, Integer fechaCierre) {
         Requerimiento requerimiento = requerimientoRepository.findById(id_requerimiento)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
+        LocalDate fecha = LocalDate.now();
+        requerimiento.setFechaAlta(fecha);
         requerimiento.setEstado(EstadoEnum.CERRADO);
         requerimiento.setUsuarioPropietario(null);
         requerimientoRepository.save(requerimiento);

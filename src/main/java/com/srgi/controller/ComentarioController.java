@@ -20,10 +20,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ComentarioController {
     private final ComentarioService comentarioService;
 
-    @GetMapping("/todos")
-    public ResponseEntity<ApiResponse> getComentariosByRequerimiento() {
+    @GetMapping("/{idRequerimiento}/todos")
+    public ResponseEntity<ApiResponse> getComentariosByRequerimiento(@PathVariable Integer idRequerimiento) {
         try {
-            List<Comentario> comentarios = comentarioService.getComentarios();
+            List<Comentario> comentarios = comentarioService.getComentarios(idRequerimiento);
             List<ComentarioDTO> comentariosDTO = comentarioService.convertirAComentariosDTO(comentarios);
             return ResponseEntity.ok(new ApiResponse("Comentarios", comentariosDTO));
         }catch (ResourceNotFoundExeption e) {
@@ -45,9 +45,9 @@ public class ComentarioController {
     @PostMapping("/{requerimiento_id}/agregar")
     public ResponseEntity<ApiResponse> crearComentario(
             @PathVariable Integer requerimiento_id,
-            @RequestBody ComentarioDTO comentarioDTO,
-            @RequestBody List<MultipartFile> files,
-            @RequestHeader("Authorization") Integer id_usuario
+            @RequestPart("comentario") ComentarioDTO comentarioDTO,
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestPart("usuario") Integer id_usuario
     ) {
         try{
             Comentario comentario = comentarioService.addComentario(comentarioDTO,requerimiento_id, id_usuario, files );
