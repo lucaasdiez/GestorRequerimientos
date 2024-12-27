@@ -47,7 +47,7 @@ public class RequerimientoController {
         }
     }
 
-    @GetMapping("/flitrar")
+    @GetMapping("/filtrar")
         public ResponseEntity<ApiResponse> flitrarRequerimiento(
                 @RequestParam(required = false) String tipoRequerimiento,
                 @RequestParam(required = false) String categoria,
@@ -63,7 +63,7 @@ public class RequerimientoController {
     }
 
     @PostMapping("/agregar")
-    public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO,
+        public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO,
                                                             @RequestPart("archivos") List<MultipartFile> files) {
         try {
             Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
