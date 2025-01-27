@@ -26,10 +26,12 @@ services:
     environment:
       - SPRING_DATASOURCE_USERNAME=sa
       - SPRING_DATASOURCE_PASSWORD=YourStrong@Passw0rd
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/sgri_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sgri_db
     ports:
       - "8080:8080"
     depends_on:
       - postgres
 volumes:
   sql_req:
+
+
