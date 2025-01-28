@@ -79,12 +79,6 @@ public class UsuarioServiceImp implements UsuarioService {
         return usuarioRepository.findAll();
     }
 
-  //  @Override
- //   public Usuario getUsuarioAutenticado() {
- //       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-  //      String email = authentication.getName();
-   //     return usuarioRepository.findByEmail(email);
-   // }
 
     @Override
     public List<UsuarioDTO> convertirAUsuariosDTO(List<Usuario> usuarios) {
