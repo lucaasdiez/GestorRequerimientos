@@ -1,10 +1,7 @@
 package com.srgi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Blob;
 
@@ -13,15 +10,14 @@ import java.sql.Blob;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Archivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String tipo;
-    @Lob
-    private Blob archivo;
-    private String url;
+    private String nombre;
+    private String ruta;
 
     @ManyToOne
     @JoinColumn(name = "comentario_id")

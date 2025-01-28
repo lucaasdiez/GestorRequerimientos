@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UExterno extends Usuario{
 
-    private int cuil;
+    private long cuil;
     private String descripcion;
     private String empresa;
 }

@@ -1,14 +1,13 @@
 package com.srgi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UExternoDTO extends UsuarioDTO{
-    private int cuil;
+    private long cuil;
     private String descripcion;
     private String empresa;
 }

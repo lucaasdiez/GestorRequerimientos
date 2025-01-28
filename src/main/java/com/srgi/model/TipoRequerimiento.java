@@ -20,15 +20,15 @@ public class TipoRequerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int codigo;
+    private String codigo;
     private String descripcion;
 
     @OneToMany(mappedBy = "tipoRequerimiento")
     @JsonIgnore
     private List<Requerimiento> requerimientos;
 
-    @OneToMany(mappedBy = "tipoRequerimiento")
-    @JsonIgnore
-    private List<CategoriaRequerimiento> categoriasRequerimientos;
+    @OneToOne
+    @JoinColumn(name = "categoria_req_id")
+    private CategoriaRequerimiento categoriaRequerimiento;
 
 }

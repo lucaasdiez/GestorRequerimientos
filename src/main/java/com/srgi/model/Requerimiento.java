@@ -3,14 +3,14 @@ package com.srgi.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.srgi.enums.EstadoEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 @Entity
 @Getter
@@ -22,12 +22,20 @@ public class Requerimiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String asunto;
-    private int codigo;
+    private String codigo;
     private String descripcion;
-    private String estado;
-    private Date fechaAlta;
+    private EstadoEnum estado;
+    private LocalDate fechaAlta;
     private LocalTime horaAlta;
     private String prioridad;
+
+    @ManyToMany
+    @JoinTable(
+            name = "requerimiento_relacionado",
+            joinColumns = @JoinColumn(name = "requerimiento_id"),
+            inverseJoinColumns = @JoinColumn(name = "requerimiento_relacionado_id")
+    )
+    private List<Requerimiento> requerimientosRelacionados;
 
     @ManyToOne
     @JoinColumn(name = "tipo_requerimiento_id")
@@ -38,7 +46,8 @@ public class Requerimiento {
     @JsonIgnore
     private Usuario emisor;
 
-    @OneToOne(mappedBy = "requerimientoPropietario")
+    @OneToOne
+    @JoinColumn(name = "propietario_id")
     private Usuario usuarioPropietario;
 
     @OneToMany(mappedBy = "requerimiento")
@@ -49,7 +58,6 @@ public class Requerimiento {
 
     @OneToMany(mappedBy = "requerimiento")
     private List<Comentario> comentarios;
-
 
 
 }

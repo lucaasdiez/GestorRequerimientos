@@ -22,19 +22,19 @@ public abstract class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
     private String nombre;
     private String apellido;
     private String email;
     private String password;
     private String usuario;
+    private String role;
 
     @OneToMany(mappedBy = "emisor")
     @JsonIgnore
     private List<Requerimiento> requerimientoEmisor;
 
-    @OneToOne
-    @JoinColumn(name = "req_propietario_id")
+    @OneToOne(mappedBy = "usuarioPropietario")
     private Requerimiento requerimientoPropietario;
 
     @OneToMany(mappedBy = "usuario")
