@@ -11,6 +11,8 @@ import com.srgi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImp implements UsuarioService {
-   // private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
 
@@ -30,6 +35,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public Usuario registrarUsuario(UExternoDTO usuarioDTO) {
+        String encodedPass = passwordEncoder.encode(usuarioDTO.getPassword());
         return Optional.of(usuarioDTO)
                 .filter(usuari -> !usuarioRepository.existsByEmail(usuarioDTO.getEmail()))
                 .map(usuariodto-> {
@@ -37,8 +43,9 @@ public class UsuarioServiceImp implements UsuarioService {
                     uExterno.setNombre(usuariodto.getNombre());
                     uExterno.setApellido(usuariodto.getApellido());
                     uExterno.setEmail(usuariodto.getEmail());
-                    uExterno.setPassword(usuarioDTO.getPassword()); //passwordEncoder.encode(usuarioDTO.getPassword()) Cuando verigique que funcione bien el registro , lo hago
+                    uExterno.setPassword(encodedPass);
                     uExterno.setEmail(usuariodto.getEmail());
+                    uExterno.setRole("ROLE_USUARIOEXTERNO");
                     uExterno.setCuil(usuariodto.getCuil());
                     uExterno.setDescripcion(usuariodto.getDescripcion());
                     uExterno.setEmpresa(usuariodto.getEmpresa());
