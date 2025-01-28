@@ -2,6 +2,7 @@ package com.srgi.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.srgi.enums.EstadoEnum;
+import com.srgi.enums.PrioridadEnum;
 import com.srgi.model.*;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -27,7 +28,7 @@ public class RequerimientoDTO {
     private EstadoEnum estado;
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
-    private String prioridad;
+    private PrioridadEnum prioridad;
     private TipoRequerimientoDTO tipoRequerimiento;
     private UExternoDTO emisor;
     private UExternoDTO propietario;

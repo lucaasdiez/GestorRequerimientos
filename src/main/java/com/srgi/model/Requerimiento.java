@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.srgi.enums.EstadoEnum;
+import com.srgi.enums.PrioridadEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -27,7 +28,7 @@ public class Requerimiento {
     private EstadoEnum estado;
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
-    private String prioridad;
+    private PrioridadEnum prioridad;
 
     @ManyToMany
     @JoinTable(
