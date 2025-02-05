@@ -14,7 +14,14 @@ public class TipoRequerimientoServiceImp implements TipoRequerimientoService {
 
 
     @Override
-    public List<TipoRequerimiento> getTipoRequerimientos() {
+    public List<TipoRequerimiento> getTipoRequerimiento() {
         return tipoRequerimientoRepository.findAll();
     }
+
+    @Override
+    public void registrarTipoRequerimiento(TipoRequerimiento tipoRequerimiento){
+        tipoRequerimientoRepository.save(tipoRequerimiento);
+    }
+
+
 }
