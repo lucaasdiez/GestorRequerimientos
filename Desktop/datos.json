@@ -1,0 +1,11 @@
+{
+    "asunto": "Asunto del tercer requerimiento",
+    "descripcion": "Este es el tercer requerimiento que genero",
+    "prioridad": "urgente",
+    "tipoRequerimiento": {
+        "id": "3"
+    },
+    "emisor": {
+        "id": "2"
+    }
+}

@@ -1,72 +1,299 @@
 {
 	"info": {
-		"_postman_id": "985b62f1-2c65-41ef-a764-25c95d890029",
+		"_postman_id": "488fb0ef-b45e-4698-9768-f6a25141c86b",
 		"name": "Back requerimientos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38033108"
 	},
 	"item": [
 		{
-			"name": "alta req",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "requerimientoDTO",
-							"type": "file",
-							"src": "/C:/Users/user/Desktop/doc.json"
+			"name": "AuthController",
+			"item": [
+				{
+					"name": "/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"1\",\r\n    \"password\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "archivos",
-							"type": "file",
-							"src": "/C:/Users/user/Desktop/Resumen Desarrollo.pdf"
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
 						}
-					]
-				},
-				"url": {
-					"raw": "localhost:8080/requerimientos/agregar",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"requerimientos",
-						"agregar"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "alta usuario",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"cuil\":\"20213\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "CategoriaRequerimientoController",
+			"item": [
+				{
+					"name": "registrarCategoriaRequerimiento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"descripcion\":\"asd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/registrarCategoriaRequerimiento",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"registrarCategoriaRequerimiento"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:8080/usuarios/registrar",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"usuarios",
-						"registrar"
-					]
+				{
+					"name": "verTodosCategoriaRequerimiento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/verTodosCategoriaRequerimiento",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"verTodosCategoriaRequerimiento"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "UsuarioController",
+			"item": [
+				{
+					"name": "alta usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cuil\":\"123812712331\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\",\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"1\",\r\n    \"password\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuarios/registrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios",
+								"registrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodosUsuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios/todos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RequerimientoController",
+			"item": [
+				{
+					"name": "alta req",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "requerimientoDTO",
+									"type": "file",
+									"src": "/C:/Users/name/Desktop/datos.json"
+								},
+								{
+									"key": "archivos",
+									"type": "file",
+									"src": "/C:/Users/name/Downloads/Cheatsheet - Java.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/requerimientos/agregar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"requerimientos",
+								"agregar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequerimientoUsuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/requerimientos/usuario/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"requerimientos",
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequerimientoId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/requerimientos/requerimiento/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"requerimientos",
+								"requerimiento",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/requerimientos/filtrar?tipoRequerimiento=ERR",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"requerimientos",
+								"filtrar"
+							],
+							"query": [
+								{
+									"key": "tipoRequerimiento",
+									"value": "ERR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TipoRequerimientoController",
+			"item": [
+				{
+					"name": "registrarTipoRequerimiento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoriaRequerimiento\":{\r\n        \"id\":\"4\"\r\n    },\r\n    \"descripcion\":\"holaa\",\r\n    \"codigo\":\"0000--asdasd-1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/registrarTipoRequerimiento",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"registrarTipoRequerimiento"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verTodosTipoRequerimiento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/verTodosTipoRequerimiento",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"verTodosTipoRequerimiento"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
