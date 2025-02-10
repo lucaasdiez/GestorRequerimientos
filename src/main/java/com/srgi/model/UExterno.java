@@ -19,4 +19,5 @@ public class UExterno extends Usuario{
     private long cuil;
     private String descripcion;
     private String empresa;
+    private boolean preferencia;
 }

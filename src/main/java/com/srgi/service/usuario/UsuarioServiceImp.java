@@ -50,6 +50,7 @@ public class UsuarioServiceImp implements UsuarioService {
                             .cuil(usuarioDTO.getCuil())
                             .descripcion(usuarioDTO.getDescripcion())
                             .empresa(usuarioDTO.getEmpresa())
+                            .preferencia(usuarioDTO.isPreferencia())
                             .build();
                     return usuarioRepository.save(uExterno);
                 }).orElseThrow(()-> new AlreadyExistExeption("Usuario con email " + usuarioDTO.getEmail() + " ya existe"));
