@@ -1,7 +1,6 @@
 package com.srgi.security;
 
 import com.srgi.service.UserEntityService;
-import com.srgi.service.usuario.UsuarioServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

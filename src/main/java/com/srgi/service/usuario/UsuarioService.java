@@ -14,10 +14,10 @@ public interface UsuarioService {
     Usuario registrarUsuario(UExternoDTO usuarioDTO );
     Usuario updateUsuario(Integer id, UsuarioDTO usuarioDTO);
     void deleteUsuario(Integer id);
-    List<Usuario> getAllUsuarios();
+    List<UExterno> getAllUsuarios();
    // public Usuario getUsuarioAutenticado();
 
-    List<UsuarioDTO> convertirAUsuariosDTO(List<Usuario> usuarios);
+    List<UExternoDTO> convertirAUsuariosDTO(List<UExterno> usuarios);
 
     UExternoDTO convertirAUsuarioDTO(Usuario usuario);
 }

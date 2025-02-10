@@ -28,8 +28,8 @@ public class UsuarioController {
     @GetMapping("/todos")
     public ResponseEntity<ApiResponse> listarUsuarios() {
         try {
-            List<Usuario> usuarios = usuarioService.getAllUsuarios();
-            List<UsuarioDTO> usuarioDTOS = usuarioService.convertirAUsuariosDTO(usuarios);
+            List<UExterno> usuarios = usuarioService.getAllUsuarios();
+            List<UExternoDTO> usuarioDTOS = usuarioService.convertirAUsuariosDTO(usuarios);
             return ResponseEntity.ok(new ApiResponse("Usuarios", usuarioDTOS));
         }catch (ResourceNotFoundExeption e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
