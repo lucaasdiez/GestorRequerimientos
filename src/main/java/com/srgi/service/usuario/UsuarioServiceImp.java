@@ -45,6 +45,7 @@ public class UsuarioServiceImp implements UsuarioService {
                             .nombre(usuarioDTO.getNombre())
                             .apellido(usuarioDTO.getApellido())
                             .email(usuarioDTO.getEmail())
+                            .username(usuarioDTO.getUsername())
                             .password(passwordEncoder.encode(usuarioDTO.getPassword()))
                             .role("ROLE_USUARIOEXTERNO")
                             .cuil(usuarioDTO.getCuil())

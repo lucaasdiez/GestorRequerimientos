@@ -29,7 +29,7 @@ public abstract class Usuario {
     private String apellido;
     private String email;
     private String password;
-    private String usuario;
+    private String username;
     private String role;
 
     @OneToMany(mappedBy = "emisor")
