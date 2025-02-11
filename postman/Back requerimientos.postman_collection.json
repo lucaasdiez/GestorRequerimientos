@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"1\",\r\n    \"password\":\"1\"\r\n}",
+							"raw": "{\r\n    \"username\":\"chau\",\r\n    \"password\":\"2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -99,7 +99,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cuil\":\"123812712331\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\",\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"1\",\r\n    \"password\":\"1\"\r\n}",
+							"raw": "{\r\n    \"cuil\":\"2\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\",\r\n    \"nombre\":\"hola\",\r\n    \"username\":\"chau\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"2\",\r\n    \"password\":\"2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -134,6 +134,35 @@
 							"path": [
 								"usuarios",
 								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cuil\":\"1\",\r\n    \"descripcion\":\"bbbb\",\r\n    \"empresa\":\"bbbb\",\r\n    \"nombre\":\"bbbb\",\r\n    \"apellido\":\"bbbb\",\r\n    \"email\":\"bbbb\",\r\n    \"username\":\"bbbb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/usuarios/2/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios",
+								"2",
+								"update"
 							]
 						}
 					},
