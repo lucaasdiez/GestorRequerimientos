@@ -70,7 +70,7 @@ public class UsuarioServiceImp implements UsuarioService {
         usuarioExistente.setNombre(usuarioDTO.getNombre());
         usuarioExistente.setApellido(usuarioDTO.getApellido());
         usuarioExistente.setEmail(usuarioDTO.getEmail());
-
+        // todo agregar mas atributos a modificar, pero debe ser un usuario externo?
         return usuarioExistente;
     }
 

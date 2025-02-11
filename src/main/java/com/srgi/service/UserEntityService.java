@@ -14,8 +14,8 @@ public class UserEntityService {
     @Autowired
     private final UsuarioRepository usuarioRepository;
 
-    public Optional<Usuario> findByEmail(String email) {
-        Usuario user = usuarioRepository.findByEmail(email);
+    public Optional<Usuario> findByUsername(String email) {
+        Usuario user = usuarioRepository.findByUsername(email);
         if (user != null){
             return Optional.of(user);
         }

@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping("/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request, HttpServletRequest servletRequest){
         var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         var principal = (UserPrincipal) authentication.getPrincipal();
