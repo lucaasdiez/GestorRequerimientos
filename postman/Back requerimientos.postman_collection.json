@@ -146,7 +146,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cuil\":\"1\",\r\n    \"descripcion\":\"bbbb\",\r\n    \"empresa\":\"bbbb\",\r\n    \"nombre\":\"bbbb\",\r\n    \"apellido\":\"bbbb\",\r\n    \"email\":\"bbbb\",\r\n    \"username\":\"bbbb\"\r\n}",
+							"raw": "{\r\n    \"cuil\": \"13\",\r\n    \"descripcion\": \"bbbb\",\r\n    \"empresa\": \"bbbb\",\r\n    \"nombre\": \"bbbb\",\r\n    \"apellido\": \"bbbb\",\r\n    \"email\": \"bbbb\",\r\n    \"username\": \"bbbb\",\r\n    \"password\": \"bbbb\",\r\n    \"role\": \"bbbb\",\r\n    \"activado\": true,\r\n    \"preferencia\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -154,14 +154,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/usuarios/2/update",
+							"raw": "localhost:8080/usuarios/1/update",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"usuarios",
-								"2",
+								"1",
 								"update"
 							]
 						}
