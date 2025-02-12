@@ -13,7 +13,13 @@ public class UsuarioDTO {
     private String apellido;
     private String email;
     private String password;
-    private String role;
     private String username;
+    private String role;
+    private boolean activado;
+    private long cuil;
+    private String descripcion;
+    private String empresa;
+    private boolean preferencia;
+
 
 }

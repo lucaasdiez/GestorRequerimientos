@@ -31,6 +31,7 @@ public abstract class Usuario {
     private String password;
     private String username;
     private String role;
+    private boolean activado;
 
     @OneToMany(mappedBy = "emisor")
     @JsonIgnore

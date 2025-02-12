@@ -61,9 +61,8 @@ public class UsuarioController {
     @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponse> updateUsuario(@PathVariable Integer id, @RequestBody UExternoDTO usuarioDTO) {
         try {
-            Usuario usuario = usuarioService.updateUsuario(id, usuarioDTO);
-            UsuarioDTO uDTO = usuarioService.convertirAUsuarioDTO(usuario);
-            return ResponseEntity.ok(new ApiResponse("Usuario actualizado", uDTO));
+            usuarioService.updateUsuario(id, usuarioDTO);
+            return ResponseEntity.ok(new ApiResponse("Usuario actualizado", null));
         }catch (ResourceNotFoundExeption e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }

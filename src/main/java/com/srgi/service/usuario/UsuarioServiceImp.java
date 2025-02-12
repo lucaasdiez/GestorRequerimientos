@@ -28,6 +28,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
+
     @Autowired
     private UsuarioExternoRepository usuarioExternoRepository;
 
@@ -51,6 +52,7 @@ public class UsuarioServiceImp implements UsuarioService {
                             .cuil(usuarioDTO.getCuil())
                             .descripcion(usuarioDTO.getDescripcion())
                             .empresa(usuarioDTO.getEmpresa())
+                            .activado(true)
                             .preferencia(usuarioDTO.isPreferencia())
                             .build();
                     return usuarioRepository.save(uExterno);
@@ -59,18 +61,26 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public Usuario updateUsuario(Integer id, UsuarioDTO usuarioDTO) {
-        return usuarioRepository.findById(id)
-                .map(usuarioExistente -> updateUsuarioExistente(usuarioExistente, usuarioDTO))
-                .map(usuarioRepository :: save)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
+    public void updateUsuario(Integer id, UsuarioDTO usuarioDTO) {
+        usuarioExternoRepository.findById(id)
+            .map(usuarioExistente -> updateUsuarioExistente(usuarioExistente, usuarioDTO))
+            .map(usuarioRepository :: save)
+            .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
+        return;
     }
 
-    private Usuario updateUsuarioExistente(Usuario usuarioExistente, UsuarioDTO usuarioDTO) {
+    private Usuario updateUsuarioExistente(UExterno usuarioExistente, UsuarioDTO usuarioDTO) {
         usuarioExistente.setNombre(usuarioDTO.getNombre());
         usuarioExistente.setApellido(usuarioDTO.getApellido());
         usuarioExistente.setEmail(usuarioDTO.getEmail());
-        // todo agregar mas atributos a modificar, pero debe ser un usuario externo?
+        usuarioExistente.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
+        usuarioExistente.setUsername(usuarioDTO.getUsername());
+        usuarioExistente.setRole(usuarioDTO.getRole());
+        usuarioExistente.setActivado(usuarioDTO.isActivado());
+        usuarioExistente.setCuil(usuarioDTO.getCuil());
+        usuarioExistente.setDescripcion(usuarioDTO.getDescripcion());
+        usuarioExistente.setEmpresa(usuarioDTO.getEmpresa());
+        usuarioExistente.setPreferencia(usuarioDTO.isPreferencia());
         return usuarioExistente;
     }
 
@@ -80,9 +90,14 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public void deleteUsuario(Integer id) {
-        usuarioRepository.findById(id).ifPresentOrElse(usuarioRepository::delete, ()-> {
+        Optional<UExterno> usuarioOptional = usuarioExternoRepository.findById(id);
+        if(usuarioOptional.isPresent()){
+            UExterno uExterno = usuarioOptional.get();
+            uExterno.setActivado(false);
+            usuarioExternoRepository.save(uExterno);
+        }else{
             throw new ResourceNotFoundExeption("Usuario no encontrado");
-        });
+        }
     }
 
     @Override
