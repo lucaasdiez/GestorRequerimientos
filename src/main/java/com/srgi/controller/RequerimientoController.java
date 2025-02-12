@@ -65,11 +65,13 @@ public class RequerimientoController {
     @PostMapping("/agregar")
         public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO,
                                                             @RequestPart("archivos") List<MultipartFile> files) {
-
-        Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
-        RequerimientoDTO requerimientoFinal = requerimientoService.convertirARequerimientoDTO(requerimiento);
-        return ResponseEntity.ok(new ApiResponse("Requerimiento", requerimientoFinal));
-
+        try {
+            Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
+            RequerimientoDTO requerimientoFinal = requerimientoService.convertirARequerimientoDTO(requerimiento);
+            return ResponseEntity.ok(new ApiResponse("Requerimiento", requerimientoFinal));
+        }catch (ResourceNotFoundExeption e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Requerimiento no encontrado", null));
+        }
     }
 
 
