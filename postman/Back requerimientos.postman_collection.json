@@ -284,7 +284,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoriaRequerimiento\":{\r\n        \"id\":\"1\"\r\n    },\r\n    \"descripcion\":\"holaa\",\r\n    \"codigo\":\"0000--asdasd-1234\"\r\n}",
+							"raw": "{\r\n    \"categoriaRequerimiento\":{\r\n        \"id\":\"1\"\r\n    },\r\n    \"descripcion\":\"holaa\",\r\n    \"codigo\":\"REH\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
