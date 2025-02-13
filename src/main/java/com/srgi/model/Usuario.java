@@ -29,7 +29,10 @@ public abstract class Usuario {
     private String apellido;
     private String email;
     private String password;
+
+    @Column(unique = true)
     private String username;
+    
     private String role;
     private boolean activado;
 
