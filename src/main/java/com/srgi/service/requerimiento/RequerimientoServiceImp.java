@@ -38,6 +38,11 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private EntityManager entityManager;
 
     @Override
+    public List<Requerimiento> verTodos(){
+        return requerimientoRepository.findAll();
+    }
+
+    @Override
     public Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO,List<MultipartFile> files) {
         TipoRequerimiento tipoRequerimiento = tipoRequerimientoRepository.findByCodigo(requerimientoDTO.getTipoRequerimiento().getCodigo())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Tipo de requerimiento no encontrado"));

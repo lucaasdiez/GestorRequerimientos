@@ -1,5 +1,6 @@
 package com.srgi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,6 @@ public class Archivo {
 
     @ManyToOne
     @JoinColumn(name = "requerimiento_id")
+    @JsonIgnore
     private Requerimiento requerimiento;
 }

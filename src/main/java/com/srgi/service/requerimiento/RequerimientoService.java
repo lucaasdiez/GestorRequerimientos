@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface RequerimientoService {
 
+    List<Requerimiento> verTodos();
     Requerimiento getRequerimientoById(Integer id);
     List<Requerimiento> getRequerimientosByPropietarioId(Integer id);
     Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO,List<MultipartFile> files );

@@ -8,6 +8,7 @@ import com.srgi.model.Requerimiento;
 import com.srgi.response.ApiResponse;
 import com.srgi.service.archivo.ArchivoService;
 import com.srgi.service.requerimiento.RequerimientoService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class RequerimientoController {
     private final RequerimientoService requerimientoService;
     private final ArchivoService archivoService;
+
+    @GetMapping("/verTodos")
+    public ResponseEntity<ApiResponse> verTodos(){
+        return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoService.verTodos()));
+    }
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<ApiResponse> listaRequerimientosPropietario(@PathVariable Integer id) {
