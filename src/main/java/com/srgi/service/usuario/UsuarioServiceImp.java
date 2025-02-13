@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,6 @@ public class UsuarioServiceImp implements UsuarioService {
         usuarioExistente.setNombre(usuarioDTO.getNombre());
         usuarioExistente.setApellido(usuarioDTO.getApellido());
         usuarioExistente.setEmail(usuarioDTO.getEmail());
-        usuarioExistente.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
         usuarioExistente.setUsername(usuarioDTO.getUsername());
         usuarioExistente.setRole(usuarioDTO.getRole());
         usuarioExistente.setActivado(usuarioDTO.isActivado());
@@ -82,6 +82,18 @@ public class UsuarioServiceImp implements UsuarioService {
         usuarioExistente.setEmpresa(usuarioDTO.getEmpresa());
         usuarioExistente.setPreferencia(usuarioDTO.isPreferencia());
         return usuarioExistente;
+    }
+
+    public boolean updatePassword(Integer id, UExternoDTO usuario){
+        Optional<UExterno> uExternoOptional = usuarioExternoRepository.findById(id);
+        if(uExternoOptional.isPresent()){
+            UExterno uExterno = uExternoOptional.get();
+            uExterno.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            usuarioExternoRepository.save(uExterno);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public UEmpresaDTO convertirAEmpresaDTO(Usuario usuario) {
