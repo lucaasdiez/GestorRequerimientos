@@ -68,6 +68,18 @@ public class UsuarioController {
         }
     }
 
+    @PutMapping("/{id}/updatePassword")
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable Integer id, @RequestBody UExternoDTO usuarioDTO) {
+        if(usuarioService.updatePassword(id, usuarioDTO)){
+            return ResponseEntity.ok(new ApiResponse("Contraseña actualizada", null));
+        }
+        else{
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Usuario no encontrado", null));
+        }
+
+
+    }
+
     @DeleteMapping("/{id}/eliminar")
     public ResponseEntity<ApiResponse> eliminarUsuario(@PathVariable Integer id) {
         try {
