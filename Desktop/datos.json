@@ -3,9 +3,9 @@
     "descripcion": "Este es el tercer requerimiento que genero",
     "prioridad": "urgente",
     "tipoRequerimiento": {
-        "id": "3"
+        "codigo": "REH"
     },
     "emisor": {
-        "id": "2"
+        "id": "1"
     }
 }
