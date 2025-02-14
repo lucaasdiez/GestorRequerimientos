@@ -21,7 +21,9 @@ public class TipoRequerimiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String codigo;
+
     private String descripcion;
 
     @OneToMany(mappedBy = "tipoRequerimiento")
