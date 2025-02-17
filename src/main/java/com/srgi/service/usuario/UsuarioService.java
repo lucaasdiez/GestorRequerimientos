@@ -16,6 +16,7 @@ public interface UsuarioService {
     boolean updatePassword(Integer id, UExternoDTO usuario);
     void deleteUsuario(Integer id);
     List<UExterno> getAllUsuarios();
+    UExterno registrarAdmin(UExternoDTO uExternoDTO);
    // public Usuario getUsuarioAutenticado();
 
     List<UExternoDTO> convertirAUsuariosDTO(List<UExterno> usuarios);

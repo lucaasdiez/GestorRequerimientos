@@ -58,6 +58,16 @@ public class UsuarioController {
         }
     }
 
+    @PostMapping("/registrarAdmin")
+    public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody UExternoDTO usuarioDTO) {
+        try{
+            UExterno admin = usuarioService.registrarAdmin(usuarioDTO);
+            return ResponseEntity.ok(new ApiResponse("Admin creado con exito",admin));
+        }catch (AlreadyExistExeption e){
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
     @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponse> updateUsuario(@PathVariable Integer id, @RequestBody UExternoDTO usuarioDTO) {
         try {
