@@ -53,6 +53,7 @@ public class ArchivoServiceImp implements ArchivoService{
         List<Archivo> archivos = new ArrayList<>();
         try {
             for(MultipartFile file : files){
+                if(file.getSize() == 0){continue;}
                 String fileName= UUID.randomUUID().toString();
                 byte[] bytes = file.getBytes();
                 String fileOriginalName = file.getOriginalFilename();
