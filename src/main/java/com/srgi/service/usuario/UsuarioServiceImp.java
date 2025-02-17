@@ -72,7 +72,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
     public UExterno registrarAdmin(UExternoDTO uExternoDTO){
         String pass = passwordEncoder.encode(uExternoDTO.getPassword());
-        UExterno admin = UExterno.builder().username(uExternoDTO.getUsername()).password(pass).role("ROLE_ADMIN").build();
+        UExterno admin = UExterno.builder().username(uExternoDTO.getUsername()).password(pass).role("ROLE_ADMIN").activado(true).build();
         return usuarioExternoRepository.save(admin);
     }
 
