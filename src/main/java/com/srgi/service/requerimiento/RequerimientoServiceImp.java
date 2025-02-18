@@ -105,7 +105,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     @Override
     public List<Requerimiento> getRequerimientosByPropietarioId(Integer id) {
-        return requerimientoRepository.findAllByEmisorId(id);
+        return requerimientoRepository.findAllByEmisorId(id)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
     }
 
 

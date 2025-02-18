@@ -1,6 +1,7 @@
 package com.srgi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,13 @@ public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "El asunto es obligatorio.")
     private String asunto;
+
+    @Column(nullable = false)
+    @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
     private Date fecha;
     private LocalTime hora;

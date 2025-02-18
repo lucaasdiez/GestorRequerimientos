@@ -19,4 +19,8 @@ public class CategoriaRequerimiento {
 
     private String descripcion;
 
+    @ManyToOne
+    @JoinColumn(name = "tipo_requerimiento_id")
+    private TipoRequerimiento tipoRequerimiento;
+
 }

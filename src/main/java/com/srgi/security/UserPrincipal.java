@@ -13,13 +13,13 @@ import java.util.Collection;
 @Setter
 public class UserPrincipal implements UserDetails {
 
-    private final Long userId;
+    private final long userId;
     private final String email;
     private final String password;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long userId, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(long userId, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.email = email;
         this.password = password;

@@ -21,10 +21,6 @@ public class ArchivoController {
 
     @GetMapping("archivo/descargar/{id}")
     public ResponseEntity<UrlResource> descargarArchivo(@PathVariable Integer id) {
-        try {
-             return archivoService.descargarArchivo(id) ;
-        }catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+             return archivoService.descargarArchivo(id);
     }
 }

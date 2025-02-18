@@ -1,6 +1,8 @@
 package com.srgi.dto;
 
 import com.srgi.model.Usuario;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 public class ComentarioDTO {
     private Integer id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "El asunto es obligatorio.")
     private String asunto;
+
+    @Column(nullable = false)
+    @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
+
     private Date fecha;
     private LocalTime hora;
 

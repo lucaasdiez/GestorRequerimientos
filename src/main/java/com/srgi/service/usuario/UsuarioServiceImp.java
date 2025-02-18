@@ -62,7 +62,7 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public void updateUsuario(Integer id, UsuarioDTO usuarioDTO) {
+    public void updateUsuario(Integer id, UExternoDTO usuarioDTO) {
         usuarioExternoRepository.findById(id)
             .map(usuarioExistente -> updateUsuarioExistente(usuarioExistente, usuarioDTO))
             .map(usuarioRepository :: save)
@@ -76,7 +76,7 @@ public class UsuarioServiceImp implements UsuarioService {
         return usuarioExternoRepository.save(admin);
     }
 
-    private Usuario updateUsuarioExistente(UExterno usuarioExistente, UsuarioDTO usuarioDTO) {
+    private Usuario updateUsuarioExistente(UExterno usuarioExistente, UExternoDTO usuarioDTO) {
         usuarioExistente.setNombre(usuarioDTO.getNombre());
         usuarioExistente.setApellido(usuarioDTO.getApellido());
         usuarioExistente.setEmail(usuarioDTO.getEmail());

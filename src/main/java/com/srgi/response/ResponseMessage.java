@@ -1,4 +1,4 @@
-package com.srgi.dto;
+package com.srgi.response;
 
 public class ResponseMessage {
     private String message;

@@ -22,24 +22,16 @@ public class ComentarioController {
 
     @GetMapping("/todos")
     public ResponseEntity<ApiResponse> getComentariosByRequerimiento() {
-        try {
             List<Comentario> comentarios = comentarioService.getComentarios();
             List<ComentarioDTO> comentariosDTO = comentarioService.convertirAComentariosDTO(comentarios);
             return ResponseEntity.ok(new ApiResponse("Comentarios", comentariosDTO));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
     }
 
     @GetMapping("/comentario/{id}")
     public ResponseEntity<ApiResponse> getComentarioById(@PathVariable Integer id) {
-        try {
             Comentario comentario = comentarioService.getComentarioById(id);
             ComentarioDTO comentarioDTO = comentarioService.convertirComentarioADTO(comentario);
             return ResponseEntity.ok(new ApiResponse("Comentario", comentarioDTO));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
     }
 
     @PostMapping("/{requerimiento_id}/agregar")
@@ -49,13 +41,9 @@ public class ComentarioController {
             @RequestBody List<MultipartFile> files,
             @RequestHeader("Authorization") Integer id_usuario
     ) {
-        try{
             Comentario comentario = comentarioService.addComentario(comentarioDTO,requerimiento_id, id_usuario, files );
             ComentarioDTO comentarioDTO1 = comentarioService.convertirComentarioADTO(comentario);
             return ResponseEntity.ok(new ApiResponse("Comentario", comentarioDTO1));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
     }
 
 }

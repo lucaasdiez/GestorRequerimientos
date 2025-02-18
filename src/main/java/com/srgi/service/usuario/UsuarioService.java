@@ -12,7 +12,7 @@ import java.util.List;
 public interface UsuarioService {
     Usuario getUsuarioById(Integer id);
     Usuario registrarUsuario(UExternoDTO usuarioDTO );
-    void updateUsuario(Integer id, UsuarioDTO usuarioDTO);
+    void updateUsuario(Integer id, UExternoDTO usuarioDTO);
     boolean updatePassword(Integer id, UExternoDTO usuario);
     void deleteUsuario(Integer id);
     List<UExterno> getAllUsuarios();

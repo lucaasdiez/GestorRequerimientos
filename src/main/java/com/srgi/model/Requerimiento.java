@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.srgi.enums.EstadoEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -21,9 +22,17 @@ public class Requerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "El asunto es obligatorio.")
     private String asunto;
+
     private String codigo;
+
+    @Column(nullable = false)
+    @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
+
     private EstadoEnum estado;
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
