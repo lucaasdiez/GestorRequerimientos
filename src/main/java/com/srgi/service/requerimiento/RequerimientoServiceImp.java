@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import com.srgi.service.EmailService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,6 +35,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private final TipoRequerimientoRepository tipoRequerimientoRepository;
     private final ArchivoService archivoService;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -68,6 +70,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
         requerimiento.setAsunto(requerimientoDTO.getAsunto());
 
         Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
+        enviarCorreoNotificacion(savedRequerimiento);
         List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
         String codigo = generarCodigo(tipoRequerimiento,requerimiento.getId());
         requerimiento.setCodigo(codigo);
@@ -86,6 +89,19 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
         return requerimientoRepository.save(requerimiento);
 
+    }
+
+    private void enviarCorreoNotificacion(Requerimiento requerimiento) {
+        String destinatario = requerimiento.getEmisor().getEmail();
+        String asunto = "Confirmación de requerimiento registrado";
+        String cuerpo = String.format("""
+            <p>Estimado/a %s,</p>
+            <p>Su requerimiento ha sido registrado exitosamente con el código: <strong>%s</strong>.</p>
+            <p>Gracias por usar nuestro sistema.</p>
+            """,
+                requerimiento.getEmisor().getNombre(), requerimiento.getCodigo());
+
+        emailService.enviarCorreo(destinatario, asunto, cuerpo);
     }
 
     private String generarCodigo(TipoRequerimiento tipoRequerimiento, Integer idRequerimiento) {
