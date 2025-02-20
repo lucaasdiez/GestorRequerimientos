@@ -68,7 +68,6 @@ public class RequerimientoServiceImp implements RequerimientoService{
                 .asunto(requerimientoDTO.getAsunto())
                 .build();
         Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
-        enviarCorreoNotificacion(savedRequerimiento);
         List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
         String codigo = generarCodigo(tipoRequerimiento,requerimiento.getId());
         requerimiento.setCodigo(codigo);
@@ -83,7 +82,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
             }
             requerimiento.setRequerimientosRelacionados(relacionados);
         }
-
+        enviarCorreoNotificacion(requerimiento);
         return requerimientoRepository.save(requerimiento);
 
     }
@@ -192,13 +191,23 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     private void enviarCorreoNotificacion(Requerimiento requerimiento) {
         String destinatario = requerimiento.getEmisor().getEmail();
-        String asunto = "Confirmación de requerimiento registrado";
+        String asunto = String.format("Nuevo requerimiento %s registrado en el sistema", requerimiento.getCodigo());
         String cuerpo = String.format("""
-            <p>Estimado/a %s,</p>
-            <p>Su requerimiento ha sido registrado exitosamente con el código: <strong>%s</strong>.</p>
-            <p>Gracias por usar nuestro sistema.</p>
-            """,
-                requerimiento.getEmisor().getNombre(), requerimiento.getCodigo());
+        <p>Estimado/a %s,</p>
+        <p>Su requerimiento ha sido dado de alta en el sistema con los siguientes detalles:</p>
+        <ul>
+            <li><strong>Código:</strong> %s</li>
+            <li><strong>Tipo:</strong> %s</li>
+            <li><strong>Asunto:</strong> %s</li>
+            <li><strong>Descripción:</strong> %s</li>
+        </ul>
+        <p>Gracias por usar nuestro sistema.</p>
+        """,
+                requerimiento.getEmisor().getNombre(),
+                requerimiento.getCodigo(),
+                requerimiento.getTipoRequerimiento().getCodigo(),
+                requerimiento.getAsunto(),
+                requerimiento.getDescripcion());
 
         emailService.enviarCorreo(destinatario, asunto, cuerpo);
     }
