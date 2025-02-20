@@ -64,7 +64,7 @@ public class UsuarioController {
 
     @PostMapping("/registrarAdmin")
     public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody AdminDTO adminDTO) {
-        UExterno admin = usuarioService.registrarAdmin(adminDTO);
+        AdminDTO admin = usuarioService.registrarAdmin(adminDTO);
         return ResponseEntity.ok(new ApiResponse("Admin creado con exito",admin));
     }
 

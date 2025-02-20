@@ -69,7 +69,7 @@ public class UsuarioServiceImp implements UsuarioService {
             .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
     }
 
-    public Admin registrarAdmin(AdminDTO adminDTO){
+    public AdminDTO registrarAdmin(AdminDTO adminDTO){
         Admin admin = Admin.builder()
                 .nombre(adminDTO.getNombre())
                 .apellido(adminDTO.getApellido())
@@ -79,7 +79,9 @@ public class UsuarioServiceImp implements UsuarioService {
                 .role("ROLE_ADMIN")
                 .activado(true)
                 .build();
-        return adminRepository.save(admin);
+        AdminDTO adminDTOFinal = modelMapper.map(admin, AdminDTO.class);
+        adminRepository.save(admin);
+        return adminDTOFinal;
     }
 
 

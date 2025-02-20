@@ -17,7 +17,7 @@ public interface UsuarioService {
     List<UExterno> getAllUsuarios();
     List<UExterno> getAllUsuariosByEstado(boolean estado);
     UExterno getUsuarioByUsername(String username);
-    Admin registrarAdmin(AdminDTO adminDTO);
+    AdminDTO registrarAdmin(AdminDTO adminDTO);
    // public Usuario getUsuarioAutenticado();
 
     List<UExternoDTO> convertirAUsuariosDTO(List<UExterno> usuarios);
