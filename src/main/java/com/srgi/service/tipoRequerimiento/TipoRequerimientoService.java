@@ -6,7 +6,11 @@ import com.srgi.model.TipoRequerimiento;
 import java.util.List;
 
 public interface TipoRequerimientoService {
-    List<TipoRequerimiento> getTipoRequerimiento();
-
-    void registrarTipoRequerimiento(TipoRequerimiento tipoRequerimiento);
+    List<TipoRequerimientoDTO> getTipoRequerimiento();
+    List<TipoRequerimientoDTO> getTipoRequerimientoByDesactivado(boolean desactivado);
+    void registrarTipoRequerimiento(TipoRequerimientoDTO tipoRequerimiento);
+    TipoRequerimientoDTO getTipoRequerimiento(String codigo);
+    void updateTipoRequerimiento(TipoRequerimientoDTO tipoRequerimiento, String codigo);
+    void eliminarTipoRequerimiento(String codigo);
+    void reactivarTipoRequerimiento(String codigo);
 }

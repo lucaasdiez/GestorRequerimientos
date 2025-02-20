@@ -8,6 +8,7 @@ import com.srgi.repository.RequerimientoRepository;
 import com.srgi.repository.TipoRequerimientoRepository;
 import com.srgi.repository.UsuarioRepository;
 import com.srgi.service.archivo.ArchivoService;
+import com.srgi.service.email.EmailService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -18,14 +19,11 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import com.srgi.service.EmailService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,25 +54,24 @@ public class RequerimientoServiceImp implements RequerimientoService{
         Usuario emisor = usuarioRepository.findById(requerimientoDTO.getEmisor().getId())
                 .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
 
-        Requerimiento requerimiento = new Requerimiento();
         LocalDate fecha = LocalDate.now();
         LocalTime hora = LocalTime.now();
-        requerimiento.setFechaAlta(fecha);
-        requerimiento.setHoraAlta(hora);
-        requerimiento.setDescripcion(requerimientoDTO.getDescripcion());
-        requerimiento.setEstado(EstadoEnum.ABIERTO);
-        requerimiento.setTipoRequerimiento(tipoRequerimiento);
-        requerimiento.setEmisor(emisor);
-        requerimiento.setUsuarioPropietario(propietario);
-        requerimiento.setPrioridad(requerimientoDTO.getPrioridad());
-        requerimiento.setAsunto(requerimientoDTO.getAsunto());
-
+        Requerimiento requerimiento = Requerimiento.builder()
+                .fechaAlta(fecha)
+                .horaAlta(hora)
+                .descripcion(requerimientoDTO.getDescripcion())
+                .estado(EstadoEnum.ABIERTO)
+                .tipoRequerimiento(tipoRequerimiento)
+                .emisor(emisor)
+                .usuarioPropietario(propietario)
+                .prioridad(requerimientoDTO.getPrioridad())
+                .asunto(requerimientoDTO.getAsunto())
+                .build();
         Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
         enviarCorreoNotificacion(savedRequerimiento);
         List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
         String codigo = generarCodigo(tipoRequerimiento,requerimiento.getId());
         requerimiento.setCodigo(codigo);
-
         requerimiento.setArchivos(archivos);
 
         if(requerimientoDTO.getRequerimientoRelacionado() != null){
@@ -88,27 +85,6 @@ public class RequerimientoServiceImp implements RequerimientoService{
         }
 
         return requerimientoRepository.save(requerimiento);
-
-    }
-
-    private void enviarCorreoNotificacion(Requerimiento requerimiento) {
-        String destinatario = requerimiento.getEmisor().getEmail();
-        String asunto = "Confirmación de requerimiento registrado";
-        String cuerpo = String.format("""
-            <p>Estimado/a %s,</p>
-            <p>Su requerimiento ha sido registrado exitosamente con el código: <strong>%s</strong>.</p>
-            <p>Gracias por usar nuestro sistema.</p>
-            """,
-                requerimiento.getEmisor().getNombre(), requerimiento.getCodigo());
-
-        emailService.enviarCorreo(destinatario, asunto, cuerpo);
-    }
-
-    private String generarCodigo(TipoRequerimiento tipoRequerimiento, Integer idRequerimiento) {
-        LocalDate fecha = LocalDate.now();
-        int anio = fecha.getYear();
-        String codigoContador = String.format("%011d", idRequerimiento);
-        return tipoRequerimiento.getCodigo() +"-" + anio + "-" + codigoContador;
 
     }
 
@@ -195,14 +171,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     @Override
     public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado) {
-        //El CriteriaBuilder se utiliza para crear los componentes de la consulta
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        //Se crea la consulta, en este caso una consulta para obtener objetos de la clase requerimiento
         CriteriaQuery<Requerimiento> cq = cb.createQuery(Requerimiento.class);
-        //El root es el objeto principal de la consulta, en este caso el Requerimiento
         Root<Requerimiento> root= cq.from(Requerimiento.class);
-
-        //Un predicado es una condicion que sera evaluada en la consulta, si un parametro es null, no se agrega a la consulta y se añade un predicado para filtrar ese campo
         List<Predicate> predicates = new ArrayList<>();
         if (tipoRequerimiento != null){
             predicates.add(cb.equal(root.join("tipoRequerimiento").get("codigo"),tipoRequerimiento));
@@ -213,12 +184,30 @@ public class RequerimientoServiceImp implements RequerimientoService{
         if (estado != null){
             predicates.add(cb.equal(root.get("estado"),estado));
         }
-        //Despues de crear todos los filtros, se combianan en una expresion de tipo AND para que se apliquen de forma conjunta
         cq.where(cb.and(predicates.toArray(new Predicate[0])));
-        //Ejecuta la consulta y obtiene los resultados
         TypedQuery<Requerimiento> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
 
 
+    private void enviarCorreoNotificacion(Requerimiento requerimiento) {
+        String destinatario = requerimiento.getEmisor().getEmail();
+        String asunto = "Confirmación de requerimiento registrado";
+        String cuerpo = String.format("""
+            <p>Estimado/a %s,</p>
+            <p>Su requerimiento ha sido registrado exitosamente con el código: <strong>%s</strong>.</p>
+            <p>Gracias por usar nuestro sistema.</p>
+            """,
+                requerimiento.getEmisor().getNombre(), requerimiento.getCodigo());
+
+        emailService.enviarCorreo(destinatario, asunto, cuerpo);
+    }
+
+    private String generarCodigo(TipoRequerimiento tipoRequerimiento, Integer idRequerimiento) {
+        LocalDate fecha = LocalDate.now();
+        int anio = fecha.getYear();
+        String codigoContador = String.format("%011d", idRequerimiento);
+        return tipoRequerimiento.getCodigo() +"-" + anio + "-" + codigoContador;
+
+    }
 }

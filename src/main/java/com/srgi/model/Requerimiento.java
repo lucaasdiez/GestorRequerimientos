@@ -18,6 +18,7 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Requerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

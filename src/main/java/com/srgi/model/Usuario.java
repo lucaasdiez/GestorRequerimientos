@@ -55,6 +55,7 @@ public abstract class Usuario {
     
     private String role;
     private boolean activado;
+    private boolean nuevaCuenta;
 
     @OneToMany(mappedBy = "emisor")
     @JsonIgnore

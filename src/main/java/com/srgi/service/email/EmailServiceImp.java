@@ -1,4 +1,4 @@
-package com.srgi.service;
+package com.srgi.service.email;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,7 +9,7 @@ import jakarta.mail.internet.MimeMessage;
 
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailServiceImp implements EmailService {
 
     private final JavaMailSender mailSender;
 

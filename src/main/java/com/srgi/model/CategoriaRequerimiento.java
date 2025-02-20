@@ -1,16 +1,14 @@
 package com.srgi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CategoriaRequerimiento {
 
     @Id
@@ -19,7 +17,9 @@ public class CategoriaRequerimiento {
 
     private String descripcion;
 
-    @ManyToOne
+    private boolean desactivado;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tipo_requerimiento_id")
     private TipoRequerimiento tipoRequerimiento;
 
