@@ -38,6 +38,7 @@ public class Requerimiento {
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
     private String prioridad;
+    private String categRequerimiento;
 
     @ManyToMany
     @JoinTable(

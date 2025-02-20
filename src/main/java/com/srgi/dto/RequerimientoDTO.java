@@ -34,6 +34,10 @@ public class RequerimientoDTO {
     @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
 
+    @Column(nullable = false)
+    @NotBlank(message = "La categoria es obligatoria.")
+    private String categRequerimiento;
+
     private EstadoEnum estado;
     private LocalDate fechaAlta;
     private LocalTime horaAlta;

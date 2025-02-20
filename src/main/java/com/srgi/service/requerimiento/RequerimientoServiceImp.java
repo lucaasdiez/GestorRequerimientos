@@ -62,6 +62,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
                 .descripcion(requerimientoDTO.getDescripcion())
                 .estado(EstadoEnum.ABIERTO)
                 .tipoRequerimiento(tipoRequerimiento)
+                .categRequerimiento(requerimientoDTO.getCategRequerimiento())
                 .emisor(emisor)
                 .usuarioPropietario(propietario)
                 .prioridad(requerimientoDTO.getPrioridad())
@@ -198,6 +199,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
         <ul>
             <li><strong>Código:</strong> %s</li>
             <li><strong>Tipo:</strong> %s</li>
+            <li><strong>Categoria:</strong> %s</li>
             <li><strong>Asunto:</strong> %s</li>
             <li><strong>Descripción:</strong> %s</li>
         </ul>
@@ -206,6 +208,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
                 requerimiento.getEmisor().getNombre(),
                 requerimiento.getCodigo(),
                 requerimiento.getTipoRequerimiento().getCodigo(),
+                requerimiento.getCategRequerimiento(),
                 requerimiento.getAsunto(),
                 requerimiento.getDescripcion());
 
