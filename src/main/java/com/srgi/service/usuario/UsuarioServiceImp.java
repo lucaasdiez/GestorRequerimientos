@@ -1,12 +1,15 @@
 package com.srgi.service.usuario;
 
+import com.srgi.dto.AdminDTO;
 import com.srgi.dto.UEmpresaDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
 import com.srgi.exeptions.AlreadyExistExeption;
 import com.srgi.exeptions.ResourceNotFoundExeption;
+import com.srgi.model.Admin;
 import com.srgi.model.UExterno;
 import com.srgi.model.Usuario;
+import com.srgi.repository.AdminRepository;
 import com.srgi.repository.UsuarioExternoRepository;
 import com.srgi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class UsuarioServiceImp implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
     private final UsuarioExternoRepository usuarioExternoRepository;
+    private final AdminRepository adminRepository;
 
     @Override
     public Usuario getUsuarioById(Integer id) {
@@ -65,10 +69,17 @@ public class UsuarioServiceImp implements UsuarioService {
             .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
     }
 
-    public UExterno registrarAdmin(UExternoDTO uExternoDTO){
-        String pass = passwordEncoder.encode(uExternoDTO.getPassword());
-        UExterno admin = UExterno.builder().username(uExternoDTO.getUsername()).password(pass).role("ROLE_ADMIN").activado(true).build();
-        return usuarioExternoRepository.save(admin);
+    public Admin registrarAdmin(AdminDTO adminDTO){
+        Admin admin = Admin.builder()
+                .nombre(adminDTO.getNombre())
+                .apellido(adminDTO.getApellido())
+                .email(adminDTO.getEmail())
+                .username(adminDTO.getUsername())
+                .password(passwordEncoder.encode(adminDTO.getPassword()))
+                .role("ROLE_ADMIN")
+                .activado(true)
+                .build();
+        return adminRepository.save(admin);
     }
 
 

@@ -1,11 +1,9 @@
 package com.srgi.service.usuario;
 
+import com.srgi.dto.AdminDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
-import com.srgi.model.Comentario;
-import com.srgi.model.Requerimiento;
-import com.srgi.model.UExterno;
-import com.srgi.model.Usuario;
+import com.srgi.model.*;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public interface UsuarioService {
     List<UExterno> getAllUsuarios();
     List<UExterno> getAllUsuariosByEstado(boolean estado);
     UExterno getUsuarioByUsername(String username);
-    UExterno registrarAdmin(UExternoDTO uExternoDTO);
+    Admin registrarAdmin(AdminDTO adminDTO);
    // public Usuario getUsuarioAutenticado();
 
     List<UExternoDTO> convertirAUsuariosDTO(List<UExterno> usuarios);

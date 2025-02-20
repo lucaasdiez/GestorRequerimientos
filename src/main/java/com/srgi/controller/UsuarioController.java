@@ -1,5 +1,6 @@
 package com.srgi.controller;
 
+import com.srgi.dto.AdminDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
 import com.srgi.exeptions.AlreadyExistExeption;
@@ -62,8 +63,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/registrarAdmin")
-    public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody UExternoDTO usuarioDTO) {
-        UExterno admin = usuarioService.registrarAdmin(usuarioDTO);
+    public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody AdminDTO adminDTO) {
+        UExterno admin = usuarioService.registrarAdmin(adminDTO);
         return ResponseEntity.ok(new ApiResponse("Admin creado con exito",admin));
     }
 
