@@ -2,7 +2,7 @@
 
 ## Descripcion
 
-Sistema de turnos medicos que permite registrarse, iniciar sesion, seleccionar una especialidad medica, reservar un turno y visualizarlos o cancelarlos. Los medicos pueden dar de alta turnos para indicar disponibilidad los cuales seran reservados por los pacientes.
+Sistema de gestion de requerimientos que permite iniciar sesion, registrar requerimientos, con categorias, archivos, comentarios, y mas datos. Tambien se pueden administrar los usuarios desde un panel de administrador
 
 ## Correr el proyecto usando docker
 
