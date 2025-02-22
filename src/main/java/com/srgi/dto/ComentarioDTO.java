@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ComentarioDTO {
     @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
 
-    private Date fecha;
+    private LocalDate fecha;
     private LocalTime hora;
 
     private String username;

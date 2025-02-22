@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Comentario {
     @Column(nullable = false)
     @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
-    private Date fecha;
+    private LocalDate fecha;
     private LocalTime hora;
 
     @ManyToOne

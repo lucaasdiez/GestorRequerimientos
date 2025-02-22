@@ -170,7 +170,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\":\"ian\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"aa2asdasdsda@asd.com\",\r\n    \"password\":\"1\",\r\n    \"username\":\"1\",\r\n    \"cuil\":\"11111111111\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
+							"raw": "{\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"aafdsafsasfdsd@asd.com\",\r\n    \"password\":\"1234\",\r\n    \"username\":\"12444fesad22234\",\r\n    \"cuil\":\"11175421111\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -198,7 +198,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"ividmar\",\r\n    \"apellido\":\"i\",\r\n    \"nombre\":\"i\",\r\n    \"email\":\"i@a.com\",\r\n    \"password\":\"1\"\r\n}",
+							"raw": "{\r\n    \"username\":\"222\",\r\n    \"apellido\":\"iasd\",\r\n    \"nombre\":\"asdi\",\r\n    \"email\":\"asasddi@a.com\",\r\n    \"password\":\"222\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -295,6 +295,26 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "eliminar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/usuarios/4/eliminar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"usuarios",
+								"4",
+								"eliminar"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -381,19 +401,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/requerimientos/filtrar?tipoRequerimiento=ERR",
+							"raw": "localhost:8080/requerimientos/1/filtrar?tipoRequerimiento=REH",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"requerimientos",
+								"1",
 								"filtrar"
 							],
 							"query": [
 								{
 									"key": "tipoRequerimiento",
-									"value": "ERR"
+									"value": "REH"
 								}
 							]
 						}
@@ -414,6 +435,26 @@
 							"path": [
 								"requerimientos",
 								"verTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cerrar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/requerimientos/REH-2025-00000000001/cerrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"requerimientos",
+								"REH-2025-00000000001",
+								"cerrar"
 							]
 						}
 					},
@@ -575,6 +616,72 @@
 								"tiposRequerimientos",
 								"ERR",
 								"reactivar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ComentarioController",
+			"item": [
+				{
+					"name": "comentarios",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"asunto\":\"ola\",\r\n    \"descripcion\":\"chau\",\r\n    \"username\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comentarios/REH-2025-00000000008/agregar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentarios",
+								"REH-2025-00000000008",
+								"agregar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ver todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"asunto\":\"ola\",\r\n    \"descripcion\":\"chau\",\r\n    \"username\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comentarios/REH-2025-00000000008/todos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comentarios",
+								"REH-2025-00000000008",
+								"todos"
 							]
 						}
 					},

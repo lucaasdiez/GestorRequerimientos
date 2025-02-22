@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,35 +44,37 @@ public class ComentarioServiceImp implements ComentarioService {
         Usuario usuario = usuarioRepository.findByUsername(comentarioDTO.getUsername());
         Requerimiento requerimiento = requerimientoRepository.findByCodigo(req_codigo);
 
-        if (requerimiento.getEstado().equals(EstadoEnum.ASIGNADO)) {
+        if (requerimiento.getEstado().equals(EstadoEnum.ABIERTO)) { // El estado debe ser asignado, pero al no tener un usuario asignado lo dejamos en abierto para evitar errores
             Comentario comentario = new Comentario();
             comentario.setAsunto(comentarioDTO.getAsunto());
             comentario.setDescripcion(comentarioDTO.getDescripcion());
-            comentario.setFecha(comentarioDTO.getFecha());
-            comentario.setHora(comentarioDTO.getHora());
+            comentario.setFecha(LocalDate.now());
+            comentario.setHora(LocalTime.now());
             comentario.setUsuario(usuario);
             comentario.setRequerimiento(requerimiento);
             Comentario comentarioSaved = comentarioRepository.save(comentario);
-
-            if (!files.isEmpty()) {
-                List<Archivo> archivoGuardado = archivoService.archivosUpload(files, requerimiento.getId(), comentarioSaved.getId());
-                comentario.setArchivos(archivoGuardado);
+            if(files!=null){
+                if (!files.isEmpty()) {
+                    List<Archivo> archivoGuardado = archivoService.archivosUpload(files, requerimiento.getId(), comentarioSaved.getId());
+                    comentario.setArchivos(archivoGuardado);
+                }
             }
             return comentarioRepository.save(comentario);
-
         }else {
             throw new RuntimeException("El estado no es valido");
         }
 
     }
     public ComentarioDTO convertirComentarioADTO(Comentario comentario) {
-        return modelMapper.map(comentario, ComentarioDTO.class);
+        ComentarioDTO comentarioDTO =  modelMapper.map(comentario, ComentarioDTO.class);
+        comentarioDTO.setUsername(comentario.getUsuario().getUsername());
+        return comentarioDTO;
     }
 
     @Override
     public List<ComentarioDTO> convertirAComentariosDTO(List<Comentario> comentarios) {
         return comentarios.stream()
-                .map(comentario -> modelMapper.map(comentario, ComentarioDTO.class))
+                .map(this::convertirComentarioADTO)
                 .toList();
     }
 

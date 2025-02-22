@@ -108,8 +108,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     //Verificar si esta bien
     @Override
     public void cerrarRequerimiento(String codigo) {
-        Requerimiento requerimiento = requerimientoRepository.findByCodigo(codigo)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
+        Requerimiento requerimiento = requerimientoRepository.findByCodigo(codigo);
         requerimiento.setEstado(EstadoEnum.CERRADO);
         requerimiento.setUsuarioPropietario(null);
         requerimiento.setFechaCierre(LocalDate.now());
