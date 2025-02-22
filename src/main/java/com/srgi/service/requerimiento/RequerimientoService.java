@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface RequerimientoService {
 
-    List<Requerimiento> verTodos();
+    List<RequerimientoDTO> verTodos();
     Requerimiento getRequerimientoById(Integer id);
     List<Requerimiento> getRequerimientosByPropietarioId(Integer id);
     Requerimiento registrarRequerimiento(RequerimientoDTO requerimientoDTO,List<MultipartFile> files );
     Requerimiento cerrarRequerimiento(Integer id_requerimiento, Integer fechaCierre);
     List<RequerimientoDTO> convertirARequerimientosDTO(List<Requerimiento> requerimiento);
     RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimientoDTO);
-    List<Requerimiento> getRequerimientoByFiltros(String tipo , String categoria, EstadoEnum estado);
+    List<Requerimiento> getRequerimientoByFiltros(String tipo , String categoria, EstadoEnum estado, String username);
 
 }

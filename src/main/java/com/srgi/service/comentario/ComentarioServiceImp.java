@@ -38,11 +38,9 @@ public class ComentarioServiceImp implements ComentarioService {
     //Verificar Si esta bien realizado
     @Override
     @Lazy
-    public Comentario addComentario(ComentarioDTO comentarioDTO, Integer idUsuario, Integer idRequerimiento, List<MultipartFile> files) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        Requerimiento requerimiento = requerimientoRepository.findById(idRequerimiento)
-                .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
+    public Comentario addComentario(ComentarioDTO comentarioDTO, String req_codigo, List<MultipartFile> files) {
+        Usuario usuario = usuarioRepository.findByUsername(comentarioDTO.getUsername());
+        Requerimiento requerimiento = requerimientoRepository.findByCodigo(req_codigo);
 
         if (requerimiento.getEstado().equals(EstadoEnum.ASIGNADO)) {
             Comentario comentario = new Comentario();
@@ -80,6 +78,11 @@ public class ComentarioServiceImp implements ComentarioService {
     @Override
     public List<Comentario> getComentarios() {
         return comentarioRepository.findAll();
+    }
+
+    @Override
+    public List<Comentario> getComentariosByCodigoRequerimiento(String codigo) {
+        return comentarioRepository.findALlByRequerimiento_Codigo(codigo);
     }
 
 

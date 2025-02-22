@@ -29,7 +29,6 @@ public class ComentarioDTO {
     private Date fecha;
     private LocalTime hora;
 
-    private Usuario usuario;
-    private RequerimientoDTO requerimiento;
+    private String username;
     private List<MultipartFile> archivos;
 }

@@ -20,9 +20,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ComentarioController {
     private final ComentarioService comentarioService;
 
-    @GetMapping("/todos")
-    public ResponseEntity<ApiResponse> getComentariosByRequerimiento() {
-            List<Comentario> comentarios = comentarioService.getComentarios();
+    @GetMapping("/{codigoRequerimiento}/todos")
+    public ResponseEntity<ApiResponse> getComentariosByRequerimiento(@PathVariable String codigoRequerimiento) {
+            List<Comentario> comentarios = comentarioService.getComentariosByCodigoRequerimiento(codigoRequerimiento);
             List<ComentarioDTO> comentariosDTO = comentarioService.convertirAComentariosDTO(comentarios);
             return ResponseEntity.ok(new ApiResponse("Comentarios", comentariosDTO));
     }
@@ -34,14 +34,13 @@ public class ComentarioController {
             return ResponseEntity.ok(new ApiResponse("Comentario", comentarioDTO));
     }
 
-    @PostMapping("/{requerimiento_id}/agregar")
+    @PostMapping("/{codigo_requerimiento}/agregar")
     public ResponseEntity<ApiResponse> crearComentario(
-            @PathVariable Integer requerimiento_id,
+            @PathVariable String codigo_requerimiento,
             @RequestBody ComentarioDTO comentarioDTO,
-            @RequestBody List<MultipartFile> files,
-            @RequestHeader("Authorization") Integer id_usuario
+            @RequestBody List<MultipartFile> files
     ) {
-            Comentario comentario = comentarioService.addComentario(comentarioDTO,requerimiento_id, id_usuario, files );
+            Comentario comentario = comentarioService.addComentario(comentarioDTO,codigo_requerimiento, files );
             ComentarioDTO comentarioDTO1 = comentarioService.convertirComentarioADTO(comentario);
             return ResponseEntity.ok(new ApiResponse("Comentario", comentarioDTO1));
     }
