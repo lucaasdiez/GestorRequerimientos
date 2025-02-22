@@ -1,12 +1,15 @@
 package com.srgi.service.usuario;
 
+import com.srgi.dto.AdminDTO;
 import com.srgi.dto.UEmpresaDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
 import com.srgi.exeptions.AlreadyExistExeption;
 import com.srgi.exeptions.ResourceNotFoundExeption;
+import com.srgi.model.Admin;
 import com.srgi.model.UExterno;
 import com.srgi.model.Usuario;
+import com.srgi.repository.AdminRepository;
 import com.srgi.repository.UsuarioExternoRepository;
 import com.srgi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +26,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImp implements UsuarioService {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    private UsuarioExternoRepository usuarioExternoRepository;
+    private final UsuarioExternoRepository usuarioExternoRepository;
+    private final AdminRepository adminRepository;
 
     @Override
     public Usuario getUsuarioById(Integer id) {
@@ -54,6 +53,7 @@ public class UsuarioServiceImp implements UsuarioService {
                             .descripcion(usuarioDTO.getDescripcion())
                             .empresa(usuarioDTO.getEmpresa())
                             .activado(true)
+                            .nuevaCuenta(true)
                             .preferencia(usuarioDTO.isPreferencia())
                             .build();
                     return usuarioRepository.save(uExterno);
@@ -67,55 +67,47 @@ public class UsuarioServiceImp implements UsuarioService {
             .map(usuarioExistente -> updateUsuarioExistente(usuarioExistente, usuarioDTO))
             .map(usuarioRepository :: save)
             .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
-        return;
     }
 
-    public UExterno registrarAdmin(UExternoDTO uExternoDTO){
-        String pass = passwordEncoder.encode(uExternoDTO.getPassword());
-        UExterno admin = UExterno.builder().username(uExternoDTO.getUsername()).password(pass).role("ROLE_ADMIN").activado(true).build();
-        return usuarioExternoRepository.save(admin);
+    public AdminDTO registrarAdmin(AdminDTO adminDTO){
+        Admin admin = Admin.builder()
+                .nombre(adminDTO.getNombre())
+                .apellido(adminDTO.getApellido())
+                .email(adminDTO.getEmail())
+                .username(adminDTO.getUsername())
+                .password(passwordEncoder.encode(adminDTO.getPassword()))
+                .role("ROLE_ADMIN")
+                .activado(true)
+                .build();
+        AdminDTO adminDTOFinal = modelMapper.map(admin, AdminDTO.class);
+        adminRepository.save(admin);
+        return adminDTOFinal;
     }
 
-    private Usuario updateUsuarioExistente(UExterno usuarioExistente, UExternoDTO usuarioDTO) {
-        usuarioExistente.setNombre(usuarioDTO.getNombre());
-        usuarioExistente.setApellido(usuarioDTO.getApellido());
-        usuarioExistente.setEmail(usuarioDTO.getEmail());
-        usuarioExistente.setUsername(usuarioDTO.getUsername());
-        usuarioExistente.setRole(usuarioDTO.getRole());
-        usuarioExistente.setActivado(usuarioDTO.isActivado());
-        usuarioExistente.setCuil(usuarioDTO.getCuil());
-        usuarioExistente.setDescripcion(usuarioDTO.getDescripcion());
-        usuarioExistente.setEmpresa(usuarioDTO.getEmpresa());
-        usuarioExistente.setPreferencia(usuarioDTO.isPreferencia());
-        return usuarioExistente;
-    }
 
-    public boolean updatePassword(Integer id, UExternoDTO usuario){
-        Optional<UExterno> uExternoOptional = usuarioExternoRepository.findById(id);
-        if(uExternoOptional.isPresent()){
-            UExterno uExterno = uExternoOptional.get();
-            uExterno.setPassword(passwordEncoder.encode(usuario.getPassword()));
-            usuarioExternoRepository.save(uExterno);
-            return true;
-        }else{
-            return false;
-        }
-    }
 
-    public UEmpresaDTO convertirAEmpresaDTO(Usuario usuario) {
-        return modelMapper.map(usuario, UEmpresaDTO.class);
+    public void updatePassword(String username, String password) {
+        UExterno uExterno= usuarioExternoRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
+        uExterno.setPassword(passwordEncoder.encode(password));
+        uExterno.setNuevaCuenta(!uExterno.isNuevaCuenta());
+        usuarioExternoRepository.save(uExterno);
     }
 
     @Override
     public void deleteUsuario(Integer id) {
-        Optional<UExterno> usuarioOptional = usuarioExternoRepository.findById(id);
-        if(usuarioOptional.isPresent()){
-            UExterno uExterno = usuarioOptional.get();
-            uExterno.setActivado(false);
-            usuarioExternoRepository.save(uExterno);
-        }else{
-            throw new ResourceNotFoundExeption("Usuario no encontrado");
-        }
+        UExterno uExterno = usuarioExternoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExeption("usuario no encontrado"));
+        uExterno.setActivado(false);
+        usuarioExternoRepository.save(uExterno);
+    }
+
+    @Override
+    public void reactivarUsuario(String username) {
+        UExterno uExterno = usuarioExternoRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundExeption("usuario no encontrado"));
+        uExterno.setActivado(true);
+        usuarioExternoRepository.save(uExterno);
     }
 
     @Override
@@ -123,12 +115,25 @@ public class UsuarioServiceImp implements UsuarioService {
         return usuarioExternoRepository.findAll();
     }
 
-  //  @Override
+    @Override
+    public List<UExterno> getAllUsuariosByEstado(boolean estado) {
+        return usuarioExternoRepository.findAllByActivado(estado);
+    }
+
+    @Override
+    public UExterno getUsuarioByUsername(String username) {
+        return usuarioExternoRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundExeption("Usuario no encontrado"));
+    }
+
+    //  @Override
  //   public Usuario getUsuarioAutenticado() {
  //       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
   //      String email = authentication.getName();
    //     return usuarioRepository.findByEmail(email);
    // }
+
+
 
     @Override
     public List<UExternoDTO> convertirAUsuariosDTO(List<UExterno> usuarios) {
@@ -140,5 +145,17 @@ public class UsuarioServiceImp implements UsuarioService {
     @Override
     public UExternoDTO convertirAUsuarioDTO(Usuario usuario) {
         return modelMapper.map(usuario, UExternoDTO.class);
+    }
+
+    private Usuario updateUsuarioExistente(UExterno usuarioExistente, UExternoDTO usuarioDTO) {
+        usuarioExistente.setNombre(usuarioDTO.getNombre());
+        usuarioExistente.setApellido(usuarioDTO.getApellido());
+        usuarioExistente.setEmail(usuarioDTO.getEmail());
+        usuarioExistente.setUsername(usuarioDTO.getUsername());
+        usuarioExistente.setCuil(usuarioDTO.getCuil());
+        usuarioExistente.setDescripcion(usuarioDTO.getDescripcion());
+        usuarioExistente.setEmpresa(usuarioDTO.getEmpresa());
+        usuarioExistente.setPreferencia(usuarioDTO.isPreferencia());
+        return usuarioExistente;
     }
 }

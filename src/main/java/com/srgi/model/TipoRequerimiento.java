@@ -4,10 +4,7 @@ package com.srgi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TipoRequerimiento {
 
     @Id
@@ -25,6 +23,8 @@ public class TipoRequerimiento {
     @Column(unique = true)
     private String codigo;
 
+    private boolean desactivado; // desactivado=false,  para eliminar
+
     @Column(nullable = false)
     @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
@@ -33,8 +33,7 @@ public class TipoRequerimiento {
     @JsonIgnore
     private List<Requerimiento> requerimientos;
 
-    @OneToMany
-    @JoinColumn(name = "categoria_req_id")
+    @OneToMany(mappedBy = "tipoRequerimiento")
     private List<CategoriaRequerimiento> categoriaRequerimiento;
 
 }

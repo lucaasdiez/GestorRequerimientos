@@ -13,10 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TipoRequerimientoDTO {
-    private Integer idTipoRequerimiento;
 
     @Column(unique = true)
+    @NotBlank(message = "El codigo es obligatoria.")
     private String codigo;
+
+    private boolean desactivado; // desactivado=false,  para eliminar
 
     @Column(nullable = false)
     @NotBlank(message = "La descripcion es obligatoria.")

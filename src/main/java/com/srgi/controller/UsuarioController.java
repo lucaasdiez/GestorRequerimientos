@@ -1,5 +1,6 @@
 package com.srgi.controller;
 
+import com.srgi.dto.AdminDTO;
 import com.srgi.dto.UExternoDTO;
 import com.srgi.dto.UsuarioDTO;
 import com.srgi.exeptions.AlreadyExistExeption;
@@ -27,77 +28,68 @@ public class UsuarioController {
 
     @GetMapping("/todos")
     public ResponseEntity<ApiResponse> listarUsuarios() {
-        try {
-            List<UExterno> usuarios = usuarioService.getAllUsuarios();
-            List<UExternoDTO> usuarioDTOS = usuarioService.convertirAUsuariosDTO(usuarios);
-            return ResponseEntity.ok(new ApiResponse("Usuarios", usuarioDTOS));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
+        List<UExterno> usuarios = usuarioService.getAllUsuarios();
+        List<UExternoDTO> usuarioDTOS = usuarioService.convertirAUsuariosDTO(usuarios);
+        return ResponseEntity.ok(new ApiResponse("Usuarios", usuarioDTOS));
     }
 
     @GetMapping("/{id}/detalle")
     public ResponseEntity<ApiResponse> getUsuario(@PathVariable Integer id) {
-        try {
-            Usuario usuario = usuarioService.getUsuarioById(id);
-            UsuarioDTO usuarioDTO = usuarioService.convertirAUsuarioDTO(usuario);
-            return ResponseEntity.ok(new ApiResponse("Usuario", usuarioDTO));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
-        }
+        Usuario usuario = usuarioService.getUsuarioById(id);
+        UsuarioDTO usuarioDTO = usuarioService.convertirAUsuarioDTO(usuario);
+        return ResponseEntity.ok(new ApiResponse("Usuario", usuarioDTO));
     }
+
+    @GetMapping("/todos/{estadoCuenta}")
+    public ResponseEntity<ApiResponse> getUsuarioByEstadoCuenta(@PathVariable boolean estadoCuenta) {
+        List<UExterno> uExternos = usuarioService.getAllUsuariosByEstado(estadoCuenta);
+        List<UExternoDTO> uExternosDTO = usuarioService.convertirAUsuariosDTO(uExternos);
+        return ResponseEntity.ok(new ApiResponse("Usuarios encontrados", uExternosDTO));
+    }
+
+    @GetMapping("/usuario/{username}")
+    public ResponseEntity<ApiResponse> getUsuarioByUsername(@PathVariable String username) {
+        UExterno uExterno = usuarioService.getUsuarioByUsername(username);
+        UExternoDTO userDTO = usuarioService.convertirAUsuarioDTO(uExterno);
+        return ResponseEntity.ok(new ApiResponse("Usuario encontrado", userDTO));
+    }
+
 
     @PostMapping("/registrar")
     public ResponseEntity<ApiResponse> registrarUsuario(@RequestBody UExternoDTO usuarioDTO) {
-        try{
-            Usuario usuario = usuarioService.registrarUsuario(usuarioDTO);
-            UExternoDTO uDTO = usuarioService.convertirAUsuarioDTO(usuario);
-            return ResponseEntity.ok(new ApiResponse("Usuario registrado", uDTO));
-        }catch (AlreadyExistExeption e){
-            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
-        }
+        Usuario usuario = usuarioService.registrarUsuario(usuarioDTO);
+        UExternoDTO uDTO = usuarioService.convertirAUsuarioDTO(usuario);
+        return ResponseEntity.ok(new ApiResponse("Usuario registrado", uDTO));
     }
 
     @PostMapping("/registrarAdmin")
-    public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody UExternoDTO usuarioDTO) {
-        try{
-            UExterno admin = usuarioService.registrarAdmin(usuarioDTO);
-            return ResponseEntity.ok(new ApiResponse("Admin creado con exito",admin));
-        }catch (AlreadyExistExeption e){
-            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
-        }
+    public ResponseEntity<ApiResponse> registrarAdmin(@RequestBody AdminDTO adminDTO) {
+        AdminDTO admin = usuarioService.registrarAdmin(adminDTO);
+        return ResponseEntity.ok(new ApiResponse("Admin creado con exito",admin));
     }
 
     @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponse> updateUsuario(@PathVariable Integer id, @RequestBody UExternoDTO usuarioDTO) {
-        try {
-            usuarioService.updateUsuario(id, usuarioDTO);
-            return ResponseEntity.ok(new ApiResponse("Usuario actualizado", null));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
+        usuarioService.updateUsuario(id, usuarioDTO);
+        return ResponseEntity.ok(new ApiResponse("Usuario actualizado", null));
     }
 
-    @PutMapping("/{id}/updatePassword")
-    public ResponseEntity<ApiResponse> updatePassword(@PathVariable Integer id, @RequestBody UExternoDTO usuarioDTO) {
-        if(usuarioService.updatePassword(id, usuarioDTO)){
-            return ResponseEntity.ok(new ApiResponse("Contraseña actualizada", null));
-        }
-        else{
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Usuario no encontrado", null));
-        }
-
-
+    @PatchMapping("/{username}/updatePassword")
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String username, @RequestParam String password) {
+        usuarioService.updatePassword(username, password);
+        return ResponseEntity.ok(new ApiResponse("Contraseña actualizada", null));
     }
 
-    @DeleteMapping("/{id}/eliminar")
+    @PatchMapping("/{id}/eliminar")
     public ResponseEntity<ApiResponse> eliminarUsuario(@PathVariable Integer id) {
-        try {
-            usuarioService.deleteUsuario(id);
-            return ResponseEntity.ok(new ApiResponse("Usuario eliminado", null));
-        }catch (ResourceNotFoundExeption e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
+        usuarioService.deleteUsuario(id);
+        return ResponseEntity.ok(new ApiResponse("Usuario eliminado", null));
+    }
+
+    @PatchMapping("/{username}/reactivar")
+    public ResponseEntity<ApiResponse> reactivarUsuario(@PathVariable String username) {
+        usuarioService.reactivarUsuario(username);
+        return ResponseEntity.ok(new ApiResponse("Usuario reactivado", null));
     }
 
 

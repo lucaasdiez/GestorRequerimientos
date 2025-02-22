@@ -18,6 +18,7 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Requerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +39,7 @@ public class Requerimiento {
     private LocalTime horaAlta;
     private LocalDate fechaCierre;
     private String prioridad;
+    private String categRequerimiento;
 
     @ManyToMany
     @JoinTable(

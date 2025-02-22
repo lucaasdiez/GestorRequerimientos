@@ -43,5 +43,6 @@ public class UsuarioDTO {
 
     private String role;
     private boolean activado;
+    private boolean nuevaCuenta;
 
 }

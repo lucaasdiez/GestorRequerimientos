@@ -32,28 +32,28 @@ public class RequerimientoController {
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<ApiResponse> listaRequerimientosPropietario(@PathVariable Integer id) {
-            List<Requerimiento> requerimientos = requerimientoService.getRequerimientosByPropietarioId(id);
-            List<RequerimientoDTO> requerimientoDTOS =requerimientoService.convertirARequerimientosDTO(requerimientos);
-            return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
+        List<Requerimiento> requerimientos = requerimientoService.getRequerimientosByPropietarioId(id);
+        List<RequerimientoDTO> requerimientoDTOS =requerimientoService.convertirARequerimientosDTO(requerimientos);
+        return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
 
     }
 
     @GetMapping("/requerimiento/{id}")
     public ResponseEntity<ApiResponse> getRequerimiento(@PathVariable Integer id) {
-            Requerimiento requerimiento = requerimientoService.getRequerimientoById(id);
-            RequerimientoDTO respDTO = requerimientoService.convertirARequerimientoDTO(requerimiento);
-            return ResponseEntity.ok(new ApiResponse("Requerimiento", respDTO ));
+        Requerimiento requerimiento = requerimientoService.getRequerimientoById(id);
+        RequerimientoDTO respDTO = requerimientoService.convertirARequerimientoDTO(requerimiento);
+        return ResponseEntity.ok(new ApiResponse("Requerimiento", respDTO ));
     }
 
     @GetMapping("/filtrar")
-        public ResponseEntity<ApiResponse> flitrarRequerimiento(
-                @RequestParam(required = false) String tipoRequerimiento,
-                @RequestParam(required = false) String categoria,
-                @RequestParam(required = false) EstadoEnum estado
-        ){
-            List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado);
-            List<RequerimientoDTO> requerimientoDTOS = requerimientoService.convertirARequerimientosDTO(requerimientos);
-            return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
+    public ResponseEntity<ApiResponse> flitrarRequerimiento(
+            @RequestParam(required = false) String tipoRequerimiento,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) EstadoEnum estado
+    ){
+        List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado);
+        List<RequerimientoDTO> requerimientoDTOS = requerimientoService.convertirARequerimientosDTO(requerimientos);
+        return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
     }
 
     @PostMapping("/agregar")

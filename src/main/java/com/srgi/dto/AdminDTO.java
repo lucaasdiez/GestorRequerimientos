@@ -1,31 +1,17 @@
-package com.srgi.model;
+package com.srgi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
-
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class AdminDTO {
 
     @Column(nullable = false, length = 50)
     @NotBlank(message = "El nombre es obligatorio.")
@@ -43,6 +29,7 @@ public abstract class Usuario {
     @Size(max = 100, message = "El correo electrónico no puede superar los 100 caracteres.")
     private String email;
 
+
     @Column(nullable = false, length = 100)
     @NotBlank(message = "La contraseña es obligatoria.")
     @Size(max = 100, message = "La contraseña no puede superar los 100 caracteres.")
@@ -52,20 +39,4 @@ public abstract class Usuario {
     @NotBlank(message = "El nombre de usuario es obligatorio.")
     @Size(max = 50, message = "El nombre de usuario no puede superar los 50 caracteres.")
     private String username;
-    
-    private String role;
-    private boolean activado;
-    private boolean nuevaCuenta;
-
-    @OneToMany(mappedBy = "emisor")
-    @JsonIgnore
-    private List<Requerimiento> requerimientoEmisor;
-
-    @OneToOne(mappedBy = "usuarioPropietario")
-    private Requerimiento requerimientoPropietario;
-
-    @OneToMany(mappedBy = "usuario")
-    private List<Evento> eventos;
-
-
 }
