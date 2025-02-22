@@ -18,7 +18,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,11 +75,10 @@ public class RequerimientoServiceImp implements RequerimientoService{
         requerimiento.setCodigo(codigo);
         requerimiento.setArchivos(archivos);
 
-        if(requerimientoDTO.getRequerimientoRelacionado() != null){
+        if(requerimientoDTO.getCodigoRequerimientoRelacionado() != null){
             List<Requerimiento> relacionados = new ArrayList<>();
-            for(RequerimientoDTO requerimientoRelacionado : requerimientoDTO.getRequerimientoRelacionado()){
-                Requerimiento relacionado = requerimientoRepository.findById(requerimientoRelacionado.getId())
-                        .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
+            for(String requerimientoRelacionado : requerimientoDTO.getCodigoRequerimientoRelacionado()){
+                Requerimiento relacionado = requerimientoRepository.findByCodigo(requerimientoRelacionado);
                 relacionados.add(relacionado);
             }
             requerimiento.setRequerimientosRelacionados(relacionados);

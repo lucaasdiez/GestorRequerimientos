@@ -47,5 +47,5 @@ public class RequerimientoDTO {
     private UExternoDTO propietario;
     private List<ArchivoDTO> archivos;
     private List<ComentarioDTO> comentarios;
-    private List<RequerimientoDTO> requerimientoRelacionado;
+    private List<String> codigoRequerimientoRelacionado;
 }
