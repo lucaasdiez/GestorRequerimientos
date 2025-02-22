@@ -45,13 +45,14 @@ public class RequerimientoController {
         return ResponseEntity.ok(new ApiResponse("Requerimiento", respDTO ));
     }
 
-    @GetMapping("/filtrar")
+    @GetMapping("/{username}/filtrar")
     public ResponseEntity<ApiResponse> flitrarRequerimiento(
+            @PathVariable String username,
             @RequestParam(required = false) String tipoRequerimiento,
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) EstadoEnum estado
     ){
-        List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado);
+        List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado, username);
         List<RequerimientoDTO> requerimientoDTOS = requerimientoService.convertirARequerimientosDTO(requerimientos);
         return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
     }

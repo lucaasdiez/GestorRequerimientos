@@ -2,6 +2,7 @@ package com.srgi.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -34,6 +35,7 @@ public class TipoRequerimiento {
     private List<Requerimiento> requerimientos;
 
     @OneToMany(mappedBy = "tipoRequerimiento")
+    @JsonManagedReference
     private List<CategoriaRequerimiento> categoriaRequerimiento;
 
 }

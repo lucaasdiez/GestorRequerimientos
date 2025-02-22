@@ -39,8 +39,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private EntityManager entityManager;
 
     @Override
-    public List<Requerimiento> verTodos(){
-        return requerimientoRepository.findAll();
+    public List<RequerimientoDTO> verTodos(){
+        List<Requerimiento> requerimientos =  requerimientoRepository.findAll();
+        return convertirARequerimientosDTO(requerimientos);
     }
 
     @Override
@@ -171,7 +172,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
     @Override
-    public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado) {
+    public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado, String username) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Requerimiento> cq = cb.createQuery(Requerimiento.class);
         Root<Requerimiento> root= cq.from(Requerimiento.class);
@@ -185,11 +186,13 @@ public class RequerimientoServiceImp implements RequerimientoService{
         if (estado != null){
             predicates.add(cb.equal(root.get("estado"),estado));
         }
+        if(username != null){
+            predicates.add(cb.equal(root.get("emisor").get("username"), username));
+        }
         cq.where(cb.and(predicates.toArray(new Predicate[0])));
         TypedQuery<Requerimiento> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
-
 
     private void enviarCorreoNotificacion(Requerimiento requerimiento) {
         String destinatario = requerimiento.getEmisor().getEmail();
