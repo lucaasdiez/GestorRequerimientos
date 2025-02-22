@@ -22,6 +22,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/usuarios")
 public class UsuarioController {
     private final UsuarioService usuarioService;

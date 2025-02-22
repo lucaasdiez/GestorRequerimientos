@@ -18,6 +18,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -106,13 +107,13 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
     //Verificar si esta bien
     @Override
-    public Requerimiento cerrarRequerimiento(Integer id_requerimiento, Integer fechaCierre) {
-        Requerimiento requerimiento = requerimientoRepository.findById(id_requerimiento)
+    public void cerrarRequerimiento(String codigo) {
+        Requerimiento requerimiento = requerimientoRepository.findByCodigo(codigo)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
         requerimiento.setEstado(EstadoEnum.CERRADO);
         requerimiento.setUsuarioPropietario(null);
+        requerimiento.setFechaCierre(LocalDate.now());
         requerimientoRepository.save(requerimiento);
-        return requerimiento;
     }
 
     @Override
@@ -192,7 +193,6 @@ public class RequerimientoServiceImp implements RequerimientoService{
         TypedQuery<Requerimiento> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
-
 
     private void enviarCorreoNotificacion(Requerimiento requerimiento) {
         String destinatario = requerimiento.getEmisor().getEmail();

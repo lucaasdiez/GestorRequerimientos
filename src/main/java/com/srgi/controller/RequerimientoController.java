@@ -58,12 +58,18 @@ public class RequerimientoController {
     }
 
     @PostMapping("/agregar")
-    public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO, @RequestPart("archivos") List<MultipartFile> files) {
-        Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
-        RequerimientoDTO requerimientoFinal = requerimientoService.convertirARequerimientoDTO(requerimiento);
-        return ResponseEntity.ok(new ApiResponse("Requerimiento", requerimientoFinal));
-
+        public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO, @RequestPart("archivos") List<MultipartFile> files) {
+            Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
+            RequerimientoDTO requerimientoFinal = requerimientoService.convertirARequerimientoDTO(requerimiento);
+            return ResponseEntity.ok(new ApiResponse("Requerimiento", requerimientoFinal));
     }
+
+    @PutMapping("/{codigo}/cerrar")
+    public ResponseEntity<ApiResponse> cerrarRequerimiento(@PathVariable String codigo){
+        requerimientoService.cerrarRequerimiento(codigo);
+        return ResponseEntity.ok(new ApiResponse("Requerimiento cerrado con exito", null));
+    }
+
 
 
 }

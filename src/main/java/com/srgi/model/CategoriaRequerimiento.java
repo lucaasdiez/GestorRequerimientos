@@ -1,5 +1,6 @@
 package com.srgi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class CategoriaRequerimiento {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tipo_requerimiento_id")
+    @JsonBackReference
     private TipoRequerimiento tipoRequerimiento;
 
 }
