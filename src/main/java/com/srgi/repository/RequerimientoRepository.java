@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface RequerimientoRepository extends JpaRepository<Requerimiento, Integer> {
     Optional<List<Requerimiento>> findAllByEmisorId(Integer id);
+
+    Optional<Requerimiento> findByCodigo(String codigo);
 }

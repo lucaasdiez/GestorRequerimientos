@@ -36,6 +36,7 @@ public class Requerimiento {
     private EstadoEnum estado;
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
+    private LocalDate fechaCierre;
     private String prioridad;
 
     @ManyToMany
