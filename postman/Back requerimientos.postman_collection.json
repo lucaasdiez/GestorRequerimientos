@@ -49,7 +49,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"descripcion\":\"Solicitud Nuevo Hardware\",\r\n    \"codigoTipoRequerimiento\": \"REH\"\r\n}",
+							"raw": "{\r\n    \"descripcion\":\"Solicitud Nuevo Hardware\",\r\n    \"codigoTipoRequerimiento\": \"PPP\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -401,7 +401,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/requerimientos/1/filtrar?tipoRequerimiento=REH",
+							"raw": "localhost:8080/requerimientos/1/filtrar",
 							"host": [
 								"localhost"
 							],
@@ -413,8 +413,19 @@
 							],
 							"query": [
 								{
+									"key": "estado",
+									"value": "ABIERTO",
+									"disabled": true
+								},
+								{
 									"key": "tipoRequerimiento",
-									"value": "REH"
+									"value": "REH",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -472,7 +483,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"descripcion\":\"Requerimiento Hardware\",\r\n    \"codigo\":\"REH\"\r\n}",
+							"raw": "{\r\n    \"descripcion\":\"Requerimiento Hardware\",\r\n    \"codigo\":\"PPP\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
