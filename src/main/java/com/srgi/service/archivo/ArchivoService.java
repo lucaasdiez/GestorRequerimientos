@@ -10,6 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ArchivoService {
-    List<Archivo> archivosUpload(List<MultipartFile> file, Integer reqId, Integer comId);
+    List<Archivo> archivosUpload(List<MultipartFile> file, Integer requerimientoId, Integer comentarioId);
     ResponseEntity<UrlResource> descargarArchivo(Integer archivoId);
 }

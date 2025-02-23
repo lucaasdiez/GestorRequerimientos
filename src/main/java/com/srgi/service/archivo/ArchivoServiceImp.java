@@ -46,14 +46,14 @@ public class ArchivoServiceImp implements ArchivoService{
 
 
     @Override
-    public List<Archivo> archivosUpload(List<MultipartFile> files, Integer reqId, Integer comId) {
-        Requerimiento req = requerimientoRepository.findById(reqId)
+    public List<Archivo> archivosUpload(List<MultipartFile> files, Integer requerimientoId, Integer comentarioId) {
+        Requerimiento req = requerimientoRepository.findById(requerimientoId)
                 .orElseThrow(() -> new ResourceNotFoundExeption("Requerimiento no encontrado"));
-        Comentario com = (comId != null) ? comentarioRepository.findById(comId).orElse(null) : null;
+        Comentario com = (comentarioId != null) ? comentarioRepository.findById(comentarioId).orElse(null) : null;
         List<Archivo> archivos = new ArrayList<>();
         try {
             for(MultipartFile file : files){
-                if(file.getSize() == 0){continue;}
+                if(files.isEmpty()){continue;}
                 String fileName= UUID.randomUUID().toString();
                 byte[] bytes = file.getBytes();
                 String fileOriginalName = file.getOriginalFilename();
