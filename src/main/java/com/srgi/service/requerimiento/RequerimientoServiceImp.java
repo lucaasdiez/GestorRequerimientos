@@ -70,10 +70,14 @@ public class RequerimientoServiceImp implements RequerimientoService{
                 .asunto(requerimientoDTO.getAsunto())
                 .build();
         Requerimiento savedRequerimiento = requerimientoRepository.save(requerimiento);
-        List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
+        if (files != null && !files.isEmpty()) {
+            List<Archivo> archivos = archivoService.archivosUpload(files, savedRequerimiento.getId(), null);
+            requerimiento.setArchivos(archivos);
+        }
+
         String codigo = generarCodigo(tipoRequerimiento,requerimiento.getId());
         requerimiento.setCodigo(codigo);
-        requerimiento.setArchivos(archivos);
+        requerimiento.setArchivos(null);
 
         if(requerimientoDTO.getCodigoRequerimientoRelacionado() != null){
             List<Requerimiento> relacionados = new ArrayList<>();
@@ -116,15 +120,18 @@ public class RequerimientoServiceImp implements RequerimientoService{
     @Override
     public RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimiento) {
         RequerimientoDTO req=  modelMapper.map(requerimiento, RequerimientoDTO.class);
-        List<ArchivoDTO> archivosDTO = requerimiento.getArchivos().stream()
-                .map(archivo -> {
-                    ArchivoDTO archivoDTO = new ArchivoDTO();
-                    archivoDTO.setId(archivo.getId());
-                    archivoDTO.setNombre(archivo.getNombre());
-                    archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId()); // URL del endpoint de descarga
-                    return archivoDTO;
-                }).toList();
-        req.setArchivos(archivosDTO);
+        if (requerimiento.getArchivos() != null && !requerimiento.getArchivos().isEmpty()) {
+            List<ArchivoDTO> archivosDTO = requerimiento.getArchivos().stream()
+                    .map(archivo -> {
+                        ArchivoDTO archivoDTO = new ArchivoDTO();
+                        archivoDTO.setId(archivo.getId());
+                        archivoDTO.setNombre(archivo.getNombre());
+                        archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId()); // URL del endpoint de descarga
+                        return archivoDTO;
+                    }).toList();
+            req.setArchivos(archivosDTO);
+        }
+
         TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento(), TipoRequerimientoDTO.class);
         CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
         tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
