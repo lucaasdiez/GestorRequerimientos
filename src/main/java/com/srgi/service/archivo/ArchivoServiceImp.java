@@ -60,6 +60,7 @@ public class ArchivoServiceImp implements ArchivoService{
                 assert fileOriginalName != null;
 
                 long fileSize = file.getSize();
+                if(fileSize==0){continue;}
                 long maxFileSize = 5 * 1024 * 1024;
                 if(fileSize > maxFileSize){
                     throw new ArchivoExeption("Archivo excedido");
