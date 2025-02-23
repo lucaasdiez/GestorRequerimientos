@@ -47,6 +47,11 @@ public class CategoriaRequerimientoServiceImp implements CategRequerimientoServi
         categoriaRequerimientoRepository.save(categReqVieja);
     }
 
+    @Override
+    public List<CategoriaRequerimiento> getCategoriaByCodigoRequerimiento(String codigoRequerimiento) {
+        return categoriaRequerimientoRepository.findAllByTipoRequerimiento_Codigo(codigoRequerimiento);
+    }
+
 
     @Override
     public void registrarCategoriaRequerimiento(CategoriaRequerimientoDTO categoriaRequerimiento) {
@@ -69,7 +74,8 @@ public class CategoriaRequerimientoServiceImp implements CategRequerimientoServi
         return modelMapper.map(categoriaRequerimiento, CategoriaRequerimientoDTO.class);
     }
 
-    private List<CategoriaRequerimientoDTO> convertirADTOs(List<CategoriaRequerimiento> categReq) {
+    @Override
+    public List<CategoriaRequerimientoDTO> convertirADTOs(List<CategoriaRequerimiento> categReq) {
         return categReq.stream()
                 .map(this::convertirDTO)
                 .collect(Collectors.toList());

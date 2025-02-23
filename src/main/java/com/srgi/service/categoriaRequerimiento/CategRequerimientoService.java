@@ -11,5 +11,7 @@ public interface CategRequerimientoService {
      List<CategoriaRequerimientoDTO> getAll();
      void updateCategoriaRequerimiento(CategoriaRequerimientoDTO categoriaRequerimiento, Integer id);
      void deleteCategoriaRequerimiento(Integer id);
+     List<CategoriaRequerimiento> getCategoriaByCodigoRequerimiento(String codigoRequerimiento);
+     List<CategoriaRequerimientoDTO> convertirADTOs(List<CategoriaRequerimiento> categReq);
 
 }

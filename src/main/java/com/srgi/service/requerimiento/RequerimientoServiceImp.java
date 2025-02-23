@@ -8,6 +8,7 @@ import com.srgi.repository.RequerimientoRepository;
 import com.srgi.repository.TipoRequerimientoRepository;
 import com.srgi.repository.UsuarioRepository;
 import com.srgi.service.archivo.ArchivoService;
+import com.srgi.service.categoriaRequerimiento.CategRequerimientoService;
 import com.srgi.service.email.EmailService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,6 +36,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     private final ArchivoService archivoService;
     private final ModelMapper modelMapper;
     private final EmailService emailService;
+    private final CategRequerimientoService categRequerimientoService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -134,7 +136,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
         }
 
         TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento(), TipoRequerimientoDTO.class);
-        CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
+        List<CategoriaRequerimientoDTO> categoriaRequerimientoDTO = categRequerimientoService.convertirADTOs(requerimiento.getTipoRequerimiento().getCategoriaRequerimiento());
         tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
         req.setTipoRequerimiento(tipoRequerimientoDTO);
         req.setCodigoRequerimientoRelacionado(getCodigosDeReqRelacionados(requerimiento.getRequerimientosRelacionados()));
@@ -166,7 +168,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
 
                     // Procesar tipoRequerimiento y su categoría
                     TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(requerimiento1.getTipoRequerimiento(), TipoRequerimientoDTO.class);
-                    CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento1.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
+                    List<CategoriaRequerimientoDTO> categoriaRequerimientoDTO = categRequerimientoService.convertirADTOs(requerimiento1.getTipoRequerimiento().getCategoriaRequerimiento());
                     tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
                     requerimientoDTO.setTipoRequerimiento(tipoRequerimientoDTO);
                     UExternoDTO propietario = null;
@@ -182,7 +184,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
     @Override
-    public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado, String username) {
+    public List<Requerimiento> getRequerimientoByFiltros(String tipoRequerimiento, String categoria, EstadoEnum estado, String username, String prioridad) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Requerimiento> cq = cb.createQuery(Requerimiento.class);
         Root<Requerimiento> root= cq.from(Requerimiento.class);
@@ -198,6 +200,9 @@ public class RequerimientoServiceImp implements RequerimientoService{
         }
         if(username != null){
             predicates.add(cb.equal(root.get("emisor").get("username"), username));
+        }
+        if(prioridad != null){
+            predicates.add(cb.equal(root.get("prioridad"), prioridad));
         }
         cq.where(cb.and(predicates.toArray(new Predicate[0])));
         TypedQuery<Requerimiento> query = entityManager.createQuery(cq);

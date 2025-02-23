@@ -1,9 +1,11 @@
 package com.srgi.service.tipoRequerimiento;
 
+import com.srgi.dto.CategoriaRequerimientoDTO;
 import com.srgi.dto.TipoRequerimientoDTO;
 import com.srgi.exeptions.ResourceNotFoundExeption;
 import com.srgi.model.TipoRequerimiento;
 import com.srgi.repository.TipoRequerimientoRepository;
+import com.srgi.service.categoriaRequerimiento.CategRequerimientoService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class TipoRequerimientoServiceImp implements TipoRequerimientoService {
     private final TipoRequerimientoRepository tipoRequerimientoRepository;
     private final ModelMapper modelMapper;
+    private final CategRequerimientoService categRequerimientoService;
 
 
     @Override
@@ -76,7 +79,10 @@ public class TipoRequerimientoServiceImp implements TipoRequerimientoService {
 
 
     private TipoRequerimientoDTO convertirADTO(TipoRequerimiento tipoRequerimiento) {
-        return modelMapper.map(tipoRequerimiento, TipoRequerimientoDTO.class);
+        TipoRequerimientoDTO tipoRequerimientoDTO = modelMapper.map(tipoRequerimiento, TipoRequerimientoDTO.class);
+        List<CategoriaRequerimientoDTO> categoriaRequerimientoDTO = categRequerimientoService.convertirADTOs(tipoRequerimiento.getCategoriaRequerimiento());
+        tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
+        return tipoRequerimientoDTO;
     }
 
     private List<TipoRequerimientoDTO> convertirADTOS(List<TipoRequerimiento> tipoRequerimientoDTO) {

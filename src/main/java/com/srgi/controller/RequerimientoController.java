@@ -51,9 +51,10 @@ public class RequerimientoController {
             @PathVariable String username,
             @RequestParam(required = false) String tipoRequerimiento,
             @RequestParam(required = false) String categoria,
-            @RequestParam(required = false) EstadoEnum estado
+            @RequestParam(required = false) EstadoEnum estado,
+            @RequestParam(required = false) String prioridad
     ){
-        List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado, username);
+        List<Requerimiento> requerimientos = requerimientoService.getRequerimientoByFiltros(tipoRequerimiento,categoria,estado, username, prioridad);
         List<RequerimientoDTO> requerimientoDTOS = requerimientoService.convertirARequerimientosDTO(requerimientos);
         return ResponseEntity.ok(new ApiResponse("Requerimientos", requerimientoDTOS));
     }

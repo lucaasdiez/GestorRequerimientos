@@ -16,6 +16,6 @@ public interface RequerimientoService {
     void cerrarRequerimiento(String codigo);
     List<RequerimientoDTO> convertirARequerimientosDTO(List<Requerimiento> requerimiento);
     RequerimientoDTO convertirARequerimientoDTO(Requerimiento requerimientoDTO);
-    List<Requerimiento> getRequerimientoByFiltros(String tipo , String categoria, EstadoEnum estado, String username);
+    List<Requerimiento> getRequerimientoByFiltros(String tipo , String categoria, EstadoEnum estado, String username, String prioridad);
 
 }

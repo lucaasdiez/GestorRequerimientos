@@ -24,5 +24,5 @@ public class TipoRequerimientoDTO {
     @NotBlank(message = "La descripcion es obligatoria.")
     private String descripcion;
 
-    private CategoriaRequerimientoDTO categoriaRequerimientos;
+    private List<CategoriaRequerimientoDTO> categoriaRequerimientos;
 }

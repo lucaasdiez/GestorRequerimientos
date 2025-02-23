@@ -24,6 +24,13 @@ public class CategoriaRequerimientoController {
         return ResponseEntity.ok(new ApiResponse("Categoria de requerimiento", dto));
     }
 
+    @GetMapping("/{codigo}/todas")
+    public ResponseEntity<ApiResponse> getCategoriaRequerimientoByCodigo(@PathVariable String codigo) {
+        List<CategoriaRequerimiento> categoriaRequerimiento = categReqService.getCategoriaByCodigoRequerimiento(codigo);
+        List<CategoriaRequerimientoDTO> categoriaRequerimientoDTOS = categReqService.convertirADTOs(categoriaRequerimiento);
+        return ResponseEntity.ok(new ApiResponse("Categoria de requerimiento", categoriaRequerimientoDTOS));
+    }
+
 
     @GetMapping("/todas")
     public ResponseEntity<ApiResponse> verTodosCategoriaRequerimiento(){
