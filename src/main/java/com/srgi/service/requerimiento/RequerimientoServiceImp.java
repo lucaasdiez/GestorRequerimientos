@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -136,7 +137,12 @@ public class RequerimientoServiceImp implements RequerimientoService{
         CategoriaRequerimientoDTO categoriaRequerimientoDTO = modelMapper.map(requerimiento.getTipoRequerimiento().getCategoriaRequerimiento(), CategoriaRequerimientoDTO.class);
         tipoRequerimientoDTO.setCategoriaRequerimientos(categoriaRequerimientoDTO);
         req.setTipoRequerimiento(tipoRequerimientoDTO);
+        req.setCodigoRequerimientoRelacionado(getCodigosDeReqRelacionados(requerimiento.getRequerimientosRelacionados()));
         return req;
+    }
+
+    private List<String> getCodigosDeReqRelacionados(List<Requerimiento> requerimientosRelacionados) {
+        return requerimientosRelacionados.stream().map(Requerimiento::getCodigo).collect(Collectors.toList());
     }
 
     @Override
