@@ -76,8 +76,9 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{username}/updatePassword")
-    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String username, @RequestBody String password) {
-        usuarioService.updatePassword(username, password);
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String username, @RequestBody UExternoDTO uExternoDTO) {
+        System.out.println("pass: " + uExternoDTO.getPassword());
+        usuarioService.updatePassword(username, uExternoDTO.getPassword());
         return ResponseEntity.ok(new ApiResponse("Contraseña actualizada", null));
     }
 

@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"1\",\r\n    \"password\":\"1\"\r\n}",
+							"raw": "{\r\n    \"username\":\"ianv\",\r\n    \"password\":\"2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -170,7 +170,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"aafdsafsasfdsd@asd.com\",\r\n    \"password\":\"1234\",\r\n    \"username\":\"12444fesad22234\",\r\n    \"cuil\":\"11175421111\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
+							"raw": "{\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"asdasddsadsa@asd.com\",\r\n    \"password\":\"1\",\r\n    \"username\":\"ianv\",\r\n    \"cuil\":\"11175127111\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -270,11 +270,11 @@
 				{
 					"name": "updatePassword",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\":\"ola\"\r\n}",
+							"raw": "{\r\n    \"password\":\"2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -282,14 +282,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/usuarios/1/updatePassword",
+							"raw": "localhost:8080/usuarios/ianv/updatePassword",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"usuarios",
-								"1",
+								"ianv",
 								"updatePassword"
 							]
 						}
@@ -361,7 +361,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/requerimientos/usuario/1",
+							"raw": "localhost:8080/requerimientos/usuario/14",
 							"host": [
 								"localhost"
 							],
@@ -369,7 +369,7 @@
 							"path": [
 								"requerimientos",
 								"usuario",
-								"1"
+								"14"
 							]
 						}
 					},
