@@ -76,7 +76,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{username}/updatePassword")
-    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String username, @RequestParam String password) {
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String username, @RequestBody String password) {
         usuarioService.updatePassword(username, password);
         return ResponseEntity.ok(new ApiResponse("Contraseña actualizada", null));
     }
