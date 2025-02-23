@@ -9,6 +9,7 @@ import com.srgi.response.ApiResponse;
 import com.srgi.service.archivo.ArchivoService;
 import com.srgi.service.requerimiento.RequerimientoService;
 import io.swagger.annotations.Api;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class RequerimientoController {
     }
 
     @PostMapping("/agregar")
-        public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO, @RequestPart("archivos") List<MultipartFile> files) {
+        public ResponseEntity<ApiResponse> agregarRequerimiento(@RequestPart("requerimientoDTO") RequerimientoDTO requerimientoDTO, @RequestPart(value = "archivos", required = false) List<MultipartFile> files) {
             Requerimiento requerimiento = requerimientoService.registrarRequerimiento(requerimientoDTO, files);
             RequerimientoDTO requerimientoFinal = requerimientoService.convertirARequerimientoDTO(requerimiento);
             return ResponseEntity.ok(new ApiResponse("Requerimiento", requerimientoFinal));
