@@ -39,26 +39,32 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public Usuario registrarUsuario(UExternoDTO usuarioDTO) {
-        return Optional.of(usuarioDTO)
-                .filter(usuari -> !usuarioRepository.existsByEmail(usuarioDTO.getEmail()))
-                .map(usuariodto-> {
-                    UExterno uExterno = UExterno.builder()
-                            .nombre(usuarioDTO.getNombre())
-                            .apellido(usuarioDTO.getApellido())
-                            .email(usuarioDTO.getEmail())
-                            .username(usuarioDTO.getUsername())
-                            .password(passwordEncoder.encode(usuarioDTO.getPassword()))
-                            .role("ROLE_USUARIOEXTERNO")
-                            .cuil(usuarioDTO.getCuil())
-                            .descripcion(usuarioDTO.getDescripcion())
-                            .empresa(usuarioDTO.getEmpresa())
-                            .activado(true)
-                            .nuevaCuenta(true)
-                            .preferencia(usuarioDTO.isPreferencia())
-                            .build();
-                    return usuarioRepository.save(uExterno);
-                }).orElseThrow(()-> new AlreadyExistExeption("Usuario con email " + usuarioDTO.getEmail() + " ya existe"));
+        if (usuarioRepository.existsByEmail(usuarioDTO.getEmail())) {
+            throw new AlreadyExistExeption("Usuario con email " + usuarioDTO.getEmail() + " ya existe");
+        }
+        if (usuarioRepository.existsByUsername(usuarioDTO.getUsername())) {
+            throw new AlreadyExistExeption("Usuario con username " + usuarioDTO.getUsername() + " ya existe");
 
+        }
+        if (usuarioExternoRepository.existsByCuil(usuarioDTO.getCuil())) {
+            throw new AlreadyExistExeption("Ya existe un usuario con el CUIL " + usuarioDTO.getCuil());
+        }
+
+        UExterno uExterno = UExterno.builder()
+                .nombre(usuarioDTO.getNombre())
+                .apellido(usuarioDTO.getApellido())
+                .email(usuarioDTO.getEmail())
+                .username(usuarioDTO.getUsername())
+                .password(passwordEncoder.encode(usuarioDTO.getPassword()))
+                .role("ROLE_USUARIOEXTERNO")
+                .cuil(usuarioDTO.getCuil())
+                .descripcion(usuarioDTO.getDescripcion())
+                .empresa(usuarioDTO.getEmpresa())
+                .activado(true)
+                .nuevaCuenta(true)
+                .preferencia(usuarioDTO.isPreferencia())
+                .build();
+        return usuarioRepository.save(uExterno);
     }
 
     @Override
