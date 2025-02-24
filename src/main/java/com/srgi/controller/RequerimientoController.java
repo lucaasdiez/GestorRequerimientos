@@ -21,6 +21,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/requerimientos")
 public class RequerimientoController {
     private final RequerimientoService requerimientoService;

@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class AuthController {
     private final JwtIssuer issuer = new JwtIssuer();
     private final AuthenticationManager authenticationManager;

@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @RequestMapping("/categRequerimientos")
 public class CategoriaRequerimientoController {
     private final CategRequerimientoService categReqService;
