@@ -90,6 +90,11 @@ public class UsuarioServiceImp implements UsuarioService {
         return adminDTOFinal;
     }
 
+    @Override
+    public AdminDTO getAdminByUsername(String username) {
+        Usuario usuario =  usuarioRepository.findByUsername(username);
+        return modelMapper.map(usuario, AdminDTO.class);
+    }
 
 
     public void updatePassword(String username, String password) {
