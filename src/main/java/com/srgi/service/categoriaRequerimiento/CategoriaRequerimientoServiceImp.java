@@ -36,6 +36,7 @@ public class CategoriaRequerimientoServiceImp implements CategRequerimientoServi
                 .orElseThrow(() -> new ResourceNotFoundExeption("Tipo de requerimiento no encontrado"));
         categReqVieja.setDescripcion(categoriaRequerimiento.getDescripcion());
         categReqVieja.setTipoRequerimiento(tipoRequerimiento);
+        categReqVieja.setDesactivado(false);
         categoriaRequerimientoRepository.save(categReqVieja);
     }
 
