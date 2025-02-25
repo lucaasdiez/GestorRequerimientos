@@ -144,7 +144,8 @@ public class RequerimientoServiceImp implements RequerimientoService{
     }
 
     private List<String> getCodigosDeReqRelacionados(List<Requerimiento> requerimientosRelacionados) {
-        return requerimientosRelacionados.stream().map(Requerimiento::getCodigo).collect(Collectors.toList());
+        return requerimientosRelacionados.stream()
+                .map(Requerimiento::getCodigo).collect(Collectors.toList());
     }
 
     @Override
@@ -178,6 +179,7 @@ public class RequerimientoServiceImp implements RequerimientoService{
                     UExternoDTO emisor = modelMapper.map(requerimiento1.getEmisor(), UExternoDTO.class);
                     requerimientoDTO.setEmisor(emisor);
                     requerimientoDTO.setPropietario(propietario);
+                    requerimientoDTO.setCodigoRequerimientoRelacionado(getCodigosDeReqRelacionados(requerimiento1.getRequerimientosRelacionados()));
 
                     return requerimientoDTO;
                 }).toList();
