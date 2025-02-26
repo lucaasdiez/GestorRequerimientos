@@ -170,7 +170,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\":\"hola\",\r\n    \"apellido\":\"vid\",\r\n    \"email\":\"asdasddsadsa@asd.com\",\r\n    \"password\":\"1\",\r\n    \"username\":\"ianv\",\r\n    \"cuil\":\"11175127111\",\r\n    \"descripcion\":\"la descripcion hola\",\r\n    \"empresa\":\"tucson S.A\"\r\n}",
+							"raw": "{\r\n    \"nombre\":\"nicolas\",\r\n    \"apellido\":\"ojeda\",\r\n    \"email\":\"nicolasojeda@gmail.com\",\r\n    \"password\":\"123\",\r\n    \"username\":\"nojeda\",\r\n    \"cuil\":\"21001778891\",\r\n    \"descripcion\":\"Usuario contratado por elon musk\",\r\n    \"empresa\":\"Tesla\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -198,7 +198,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"222\",\r\n    \"apellido\":\"iasd\",\r\n    \"nombre\":\"asdi\",\r\n    \"email\":\"asasddi@a.com\",\r\n    \"password\":\"222\"\r\n}",
+							"raw": "{\r\n    \"username\":\"admin\",\r\n    \"apellido\":\"vidmar\",\r\n    \"nombre\":\"ian\",\r\n    \"email\":\"ianvidmar200@gmail.com\",\r\n    \"password\":\"admin123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -206,13 +206,13 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/usuarios/registrarAdmin",
+							"raw": "localhost:8080/admin/registrarAdmin",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"usuarios",
+								"admin",
 								"registrarAdmin"
 							]
 						}
@@ -361,7 +361,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/requerimientos/usuario/14",
+							"raw": "localhost:8080/requerimientos/usuario/2",
 							"host": [
 								"localhost"
 							],
@@ -369,7 +369,7 @@
 							"path": [
 								"requerimientos",
 								"usuario",
-								"14"
+								"2"
 							]
 						}
 					},
@@ -397,18 +397,30 @@
 				},
 				{
 					"name": "Filtrar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "localhost:8080/requerimientos/1/filtrar",
+							"raw": "localhost:8080/requerimientos/2/filtrar",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"requerimientos",
-								"1",
+								"2",
 								"filtrar"
 							],
 							"query": [
@@ -644,7 +656,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"asunto\":\"ola\",\r\n    \"descripcion\":\"chau\",\r\n    \"username\":\"1\"\r\n}",
+							"raw": "{\r\n    \"asunto\":\"Asunto del comentario\",\r\n    \"descripcion\":\"Comentario de prueba\",\r\n    \"username\":\"ldiez\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -652,14 +664,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/comentarios/REH-2025-00000000008/agregar",
+							"raw": "localhost:8080/comentarios/ERR-2025-00000000004/agregar",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"comentarios",
-								"REH-2025-00000000008",
+								"ERR-2025-00000000004",
 								"agregar"
 							]
 						}
@@ -684,14 +696,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/comentarios/REH-2025-00000000008/todos",
+							"raw": "localhost:8080/comentarios/ERR-2025-00000000004/todos",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"comentarios",
-								"REH-2025-00000000008",
+								"ERR-2025-00000000004",
 								"todos"
 							]
 						}
