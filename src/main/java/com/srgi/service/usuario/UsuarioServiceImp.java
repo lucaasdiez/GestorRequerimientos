@@ -69,16 +69,6 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public void updateUsuario(Integer id, UExternoDTO usuarioDTO) {
-        if (usuarioRepository.existsByEmail(usuarioDTO.getEmail())) {
-            throw new AlreadyExistExeption("Usuario con email " + usuarioDTO.getEmail() + " ya existe");
-        }
-        if (usuarioRepository.existsByUsername(usuarioDTO.getUsername())) {
-            throw new AlreadyExistExeption("Usuario con username " + usuarioDTO.getUsername() + " ya existe");
-
-        }
-        if (usuarioExternoRepository.existsByCuil(usuarioDTO.getCuil())) {
-            throw new AlreadyExistExeption("Ya existe un usuario con el CUIL " + usuarioDTO.getCuil());
-        }
         usuarioExternoRepository.findById(id)
             .map(usuarioExistente -> updateUsuarioExistente(usuarioExistente, usuarioDTO))
             .map(usuarioRepository :: save)
