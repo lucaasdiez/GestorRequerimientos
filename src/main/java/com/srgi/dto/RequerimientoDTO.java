@@ -38,10 +38,19 @@ public class RequerimientoDTO {
     @NotBlank(message = "La categoria es obligatoria.")
     private String categRequerimiento;
 
+    @Column(nullable = false)
+    @NotBlank(message = "El estado es obligatorio")
     private EstadoEnum estado;
+
     private LocalDate fechaAlta;
     private LocalTime horaAlta;
+
+    @Column(nullable = false)
+    @NotBlank(message = "La prioridad es obligatoria.")
     private String prioridad;
+
+    @Column(nullable = false)
+    @NotBlank(message = "El tipo de requerimiento es obligatorio")
     private TipoRequerimientoDTO tipoRequerimiento;
     private UExternoDTO emisor;
     private UExternoDTO propietario;
