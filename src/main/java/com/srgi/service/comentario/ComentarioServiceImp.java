@@ -1,5 +1,6 @@
 package com.srgi.service.comentario;
 
+import com.srgi.dto.ArchivoDTO;
 import com.srgi.dto.ComentarioDTO;
 import com.srgi.enums.EstadoEnum;
 import com.srgi.exeptions.ResourceNotFoundExeption;
@@ -67,6 +68,17 @@ public class ComentarioServiceImp implements ComentarioService {
     }
     public ComentarioDTO convertirComentarioADTO(Comentario comentario) {
         ComentarioDTO comentarioDTO =  modelMapper.map(comentario, ComentarioDTO.class);
+        if (comentario.getArchivos() != null && !comentario.getArchivos().isEmpty()) {
+            List<ArchivoDTO> archivosDTO = comentario.getArchivos().stream()
+                    .map(archivo -> {
+                        ArchivoDTO archivoDTO = new ArchivoDTO();
+                        archivoDTO.setId(archivo.getId());
+                        archivoDTO.setNombre(archivo.getNombre());
+                        archivoDTO.setRutaDescarga("/archivos/archivo/descargar/" + archivo.getId()); // URL del endpoint de descarga
+                        return archivoDTO;
+                    }).toList();
+            comentarioDTO.setArchivos(archivosDTO);
+        }
         comentarioDTO.setUsername(comentario.getUsuario().getUsername());
         return comentarioDTO;
     }

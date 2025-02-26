@@ -31,5 +31,5 @@ public class ComentarioDTO {
     private LocalTime hora;
 
     private String username;
-    private List<MultipartFile> archivos;
+    private List<ArchivoDTO> archivos;
 }

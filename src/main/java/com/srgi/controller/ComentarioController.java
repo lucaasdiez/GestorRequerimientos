@@ -38,8 +38,8 @@ public class ComentarioController {
     @PostMapping("/{codigo_requerimiento}/agregar")
     public ResponseEntity<ApiResponse> crearComentario(
             @PathVariable String codigo_requerimiento,
-            @RequestBody ComentarioDTO comentarioDTO,
-            @RequestBody List<MultipartFile> files
+            @RequestPart(value = "comentarioDTO") ComentarioDTO comentarioDTO,
+            @RequestPart(value = "archivos", required = false) List<MultipartFile> files
     ) {
             Comentario comentario = comentarioService.addComentario(comentarioDTO,codigo_requerimiento, files );
             ComentarioDTO comentarioDTO1 = comentarioService.convertirComentarioADTO(comentario);
